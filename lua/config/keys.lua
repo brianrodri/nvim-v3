@@ -1,0 +1,122 @@
+vim.cmd([[ xnoremap <expr> p 'pgv''.v:register.'y' ]])
+
+return {
+    on_lazy_attach = function()
+        local oil = require('oil')
+        local snacks_lazygit = require('snacks.lazygit')
+        local snacks_picker = require('snacks.picker')
+        local which_key = require('which-key')
+
+        which_key.add({
+            { '-', function() oil.open() end, desc = 'File Explorer (buffer)' },
+            { '<esc>', ':nohlsearch<cr>', hidden = true },
+
+            {
+                { '<leader><C-h>', ':leftabove vsplit<CR>', desc = 'New Left Split' },
+                { '<leader><C-j>', ':rightbelow split<CR>', desc = 'New Bottom Split' },
+                { '<leader><C-k>', ':leftabove split<CR>', desc = 'New Top Split' },
+                { '<leader><C-l>', ':rightbelow vsplit<CR>', desc = 'New Right Split' },
+                hidden = true,
+            },
+
+            { '<leader>b', group = 'buffer' },
+            { '<leader>bd', ':bd!<cr>', desc = 'Delete Buffer' },
+
+            { '<leader>f', group = 'find' },
+            { '<leader>f:', function() snacks_picker.commands() end, desc = 'Find Command' },
+            { '<leader>f.', function() snacks_picker.resume() end, desc = 'Resume Finding' },
+            { '<leader>f/', function() snacks_picker.grep() end, desc = 'Find Pattern' },
+            { '<leader>f*', function() snacks_picker.grep_word() end, desc = 'Find Word Under Cursor' },
+            { '<leader>fb', function() snacks_picker.buffers() end, desc = 'Find Buffers' },
+            { '<leader>fc', function() snacks_picker.lazy() end, desc = 'Find Lazy Config' },
+            { '<leader>fd', function() snacks_picker.diagnostics() end, desc = 'Find Diagnostic' },
+            { '<leader>ff', function() snacks_picker.files() end, desc = 'Find Files' },
+            { '<leader>fg', function() snacks_picker.git_status() end, desc = 'Find Diff' },
+            { '<leader>fh', function() snacks_picker.help() end, desc = 'Find Help' },
+            { '<leader>fi', function() snacks_picker.icons() end, desc = 'Find Icon' },
+            { '<leader>fl', function() snacks_picker.files({ dirs = { vim.fn.stdpath('data') } }) end, desc = 'Find Plugin Spec' },
+            { '<leader>fn', function() snacks_picker.notifications() end, desc = 'Find Notification' },
+            { '<leader>fp', function() snacks_picker.pickers() end, desc = 'Find Picker' },
+            { '<leader>fr', function() snacks_picker.recent() end, desc = 'Find Recent' },
+
+            { '<leader>g', group = 'git', icon = { icon = '󰊤 ', color = 'grey' } },
+            { '<leader>gg', function() snacks_lazygit() end, desc = 'Lazygit' },
+
+            { '<leader>l', group = 'lazy', icon = { icon = '󰒲 ', color = 'azure' } },
+            { '<leader>ll', ':Lazy<CR>', desc = 'Lazy' },
+
+            { '<leader>q', group = 'quit' },
+            { '<leader>qq', ':qa!<cr>', desc = 'Quit' },
+
+            { '<leader>w', group = 'write', icon = { icon = ' ', color = 'green' } },
+            { '<leader>ww', ':w!<cr>', desc = 'Write Buffer' },
+            { '<leader>wW', ':wa!<cr>', desc = 'Write All' },
+            { '<leader>wq', ':wqa!<cr>', desc = 'Write & Quit' },
+        })
+    end,
+
+    on_lsp_attach = function(client_id, bufnr)
+        local which_key = require('which-key')
+        local client = vim.lsp.get_client_by_id(client_id)
+
+        which_key.add({
+            buffer = bufnr,
+
+            { mode = 'i', '<c-l>', vim.lsp.completion.get, hidden = true },
+
+            { '<leader>c', group = 'code', icon = ' ' },
+            { '<leader>cj', vim.lsp.buf.incoming_calls, desc = 'Incoming Calls' },
+            { '<leader>ck', vim.lsp.buf.outgoing_calls, desc = 'Outgoing Calls' },
+
+            {
+                cond = client:supports_method('textDocument/prepareTypeHierarchy'),
+                { '<leader>ct', function() vim.lsp.buf.typehierarchy('subtypes') end, desc = 'Subtypes' },
+                { '<leader>cT', function() vim.lsp.buf.typehierarchy('supertypes') end, desc = 'Supertypes'  },
+            }
+        })
+    end,
+
+    on_gitsigns_attach = function(bufnr)
+        local gitsigns = require('gitsigns')
+        local snacks_picker = require('snacks.picker')
+        local which_key = require('which-key')
+
+        -- @param global whether to change the base of all buffers.
+        local function pick_gitsigns_branch(global)
+            snacks_picker.pick({
+                all = true,
+                multi = false,
+                finder = 'git_branches',
+                format = 'git_branch',
+                preview = 'git_log',
+                title = 'Change Base  ',
+                confirm = function(picker, item)
+                    picker:close()
+                    if not item then return end
+                    local ref = item.branch or item.commit
+                    if ref then gitsigns.change_base(ref, global) end
+                end,
+            })
+        end
+
+        which_key.add({
+            buffer = bufnr,
+
+            { '[h', function() gitsigns.nav_hunk('prev') end, desc = 'Previous Hunk' },
+            { '[H', function() gitsigns.nav_hunk('first') end, desc = 'First Hunk' },
+            { ']h', function() gitsigns.nav_hunk('next') end, desc = 'Next Hunk' },
+            { ']H', function() gitsigns.nav_hunk('last') end, desc = 'Final Hunk' },
+            { 'vih', function() gitsigns.select_hunk() end, desc = 'Select Hunk' },
+
+            { '<leader>h', group = 'hunk', icon = { icon = ' ', color = 'purple' } },
+            { '<leader>ha', function() gitsigns.stage_hunk() end, desc = 'Stage Hunk' },
+            { '<leader>hA', function() gitsigns.stage_buffer() end, desc = 'Stage Buffer' },
+            { '<leader>hr', function() gitsigns.reset_hunk() end, desc = 'Reset Hunk' },
+            { '<leader>hR', function() gitsigns.reset_buffer() end, desc = 'Reset Buffer' },
+            { '<leader>hk', function() gitsigns.preview_hunk() end, desc = 'Preview Hunk' },
+            { '<leader>hK', function() gitsigns.preview_hunk_inline() end, desc = 'Preview Hunk (Inline)' },
+            { '<leader>hb', function() pick_gitsigns_branch(false) end, desc = 'Change Base (Buffer)' },
+            { '<leader>hB', function() pick_gitsigns_branch(true) end, desc = 'Change Base (Global)' },
+        })
+    end,
+}
