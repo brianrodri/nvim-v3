@@ -1,5 +1,17 @@
 vim.cmd([[ xnoremap <expr> p 'pgv''.v:register.'y' ]])
 
+---@param towards_eof boolean?
+---@param severity vim.diagnostic.Severity?
+local function diagnostic_jump(towards_eof, severity)
+    return function()
+        vim.diagnostic.jump({
+            count = (towards_eof and 1 or -1) * vim.v.count1,
+            severity = severity and vim.diagnostic.severity[severity] or nil,
+            float = true,
+        })
+    end
+end
+
 return {
     on_lazy_attach = function()
         local oil = require('oil')
@@ -38,6 +50,16 @@ return {
 
             { '<leader>b', group = 'buffer' },
             { '<leader>bd', ':bd!<cr>', desc = 'Delete Buffer' },
+
+            { '<leader>c', group = 'code', icon = ' ' },
+            { '<leader>cd', vim.diagnostic.open_float, desc = 'Line Diagnostics' },
+            { ']d', diagnostic_jump(true), desc = 'Next Diagnostic' },
+            { '[d', diagnostic_jump(false), desc = 'Prev Diagnostic' },
+            { ']e', diagnostic_jump(true, vim.diagnostic.severity.ERROR), desc = 'Next Error' },
+            { '[e', diagnostic_jump(false, vim.diagnostic.severity.ERROR), desc = 'Prev Error' },
+            { ']w', diagnostic_jump(true, vim.diagnostic.severity.WARN), desc = 'Next Warning' },
+            { '[w', diagnostic_jump(false, vim.diagnostic.severity.WARN), desc = 'Prev Warning' },
+
 
             { "<leader>d", group = 'debug', icon = { icon = ' ', color = 'red' } },
             { "<leader>dg", function() require("dap").continue() end,                                      desc = "Start/Resume" },
@@ -100,9 +122,6 @@ return {
         which_key.add({
             buffer = bufnr,
 
-            { mode = 'i', '<c-l>', vim.lsp.completion.get, hidden = true },
-
-            { '<leader>c', group = 'code', icon = ' ' },
             { '<leader>cj', vim.lsp.buf.incoming_calls, desc = 'Incoming Calls' },
             { '<leader>ck', vim.lsp.buf.outgoing_calls, desc = 'Outgoing Calls' },
 
