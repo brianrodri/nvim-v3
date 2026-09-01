@@ -98,13 +98,9 @@ return {
             { '<leader>l', group = 'lazy', icon = { icon = '󰒲 ', color = 'azure' } },
             { '<leader>ll', ':Lazy<CR>', desc = 'Lazy' },
 
-            { '<leader>q', group = 'quit' },
-            { '<leader>qq', ':qa!<cr>', desc = 'Quit' },
+            { '<leader>q', ':qa!<cr>', desc = 'Quit' },
 
-            { '<leader>w', group = 'write', icon = { icon = ' ', color = 'green' } },
-            { '<leader>ww', ':w!<cr>', desc = 'Write Buffer' },
-            { '<leader>wW', ':wa!<cr>', desc = 'Write All' },
-            { '<leader>wq', ':wqa!<cr>', desc = 'Write & Quit' },
+            { '<leader>w', ':w!<cr>', desc = 'Write Buffer' },
 
             { '<leader>v', group = 'vault', icon = { icon = '󰇈 ', color = 'purple' } },
             { '<leader>vn', function() require('obsidian.actions').new() end, desc = 'New Note' },
