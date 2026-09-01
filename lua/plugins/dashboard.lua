@@ -43,6 +43,7 @@ return {
             { icon = '󰱼 ', key = 'f', desc = 'Find File', action = '<leader>ff' },
             { icon = '󱋡 ', key = 'r', desc = 'Find Recent', action = '<leader>fr' },
             { icon = '󱁻 ', key = 'c', desc = 'Find Config', action = '<leader>fc' },
+            { icon = '󰇈 ', key = 'v', desc = 'Open Daily Note', action = '<leader>vt' },
             { icon = '󱎸 ', key = '/', desc = 'Find Pattern', action = '<leader>f/' },
             { icon = ' ', key = 'g', desc = 'Lazygit', action = '<leader>gg' },
             { icon = '󰒲 ', key = 'l', desc = 'Lazy', action = '<leader>ll' },

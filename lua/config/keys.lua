@@ -66,6 +66,13 @@ return {
             { '<leader>ww', ':w!<cr>', desc = 'Write Buffer' },
             { '<leader>wW', ':wa!<cr>', desc = 'Write All' },
             { '<leader>wq', ':wqa!<cr>', desc = 'Write & Quit' },
+
+            { '<leader>v', group = 'vault', icon = { icon = '󰇈 ', color = 'purple' } },
+            { '<leader>vn', function() require('obsidian.actions').new() end, desc = 'New Note' },
+            { '<leader>vs', function() require('obsidian.picker').grep_notes() end, desc = 'Grep Notes' },
+            { '<leader>vf', function() require('obsidian.picker').find_notes() end, desc = 'Find Notes' },
+            { '<leader>vt', function() require('obsidian.daily').today():open() end, desc = 'Daily Note' },
+            { '<leader>vr', function() require('snacks.picker').recent() end, desc = 'Recent Notes' },
         })
     end,
 
