@@ -126,7 +126,7 @@ return {
             { '<leader>ck', vim.lsp.buf.outgoing_calls, desc = 'Outgoing Calls' },
 
             {
-                cond = client:supports_method('textDocument/prepareTypeHierarchy'),
+                cond = client and client:supports_method('textDocument/prepareTypeHierarchy'),
                 { '<leader>ct', function() vim.lsp.buf.typehierarchy('subtypes') end, desc = 'Subtypes' },
                 { '<leader>cT', function() vim.lsp.buf.typehierarchy('supertypes') end, desc = 'Supertypes'  },
             }
@@ -142,7 +142,6 @@ return {
         local function pick_gitsigns_branch(global)
             snacks_picker.pick({
                 all = true,
-                multi = false,
                 finder = 'git_branches',
                 format = 'git_branch',
                 preview = 'git_log',
@@ -163,17 +162,17 @@ return {
             { '[H', function() gitsigns.nav_hunk('first') end, desc = 'First Hunk' },
             { ']h', function() gitsigns.nav_hunk('next') end, desc = 'Next Hunk' },
             { ']H', function() gitsigns.nav_hunk('last') end, desc = 'Final Hunk' },
-            { 'vih', function() gitsigns.select_hunk() end, desc = 'Select Hunk' },
+            { 'ih', function() gitsigns.select_hunk() end, desc = 'Select Hunk', mode = "no" },
 
             { '<leader>h', group = 'hunk', icon = { icon = ' ', color = 'purple' } },
             { '<leader>ha', function() gitsigns.stage_hunk() end, desc = 'Stage Hunk' },
             { '<leader>hA', function() gitsigns.stage_buffer() end, desc = 'Stage Buffer' },
             { '<leader>hr', function() gitsigns.reset_hunk() end, desc = 'Reset Hunk' },
             { '<leader>hR', function() gitsigns.reset_buffer() end, desc = 'Reset Buffer' },
-            { '<leader>hk', function() gitsigns.preview_hunk() end, desc = 'Preview Hunk' },
-            { '<leader>hK', function() gitsigns.preview_hunk_inline() end, desc = 'Preview Hunk (Inline)' },
-            { '<leader>hb', function() pick_gitsigns_branch(false) end, desc = 'Change Base (Buffer)' },
-            { '<leader>hB', function() pick_gitsigns_branch(true) end, desc = 'Change Base (Global)' },
+            { '<leader>hk', function() gitsigns.preview_hunk_inline() end, desc = 'Preview Hunk (Inline)' },
+            { '<leader>hK', function() gitsigns.preview_hunk() end, desc = 'Preview Hunk' },
+            { '<leader>hb', function() pick_gitsigns_branch(true) end, desc = 'Change Base (Global)' },
+            { '<leader>hB', function() pick_gitsigns_branch(false) end, desc = 'Change Base (Buffer)' },
         })
     end,
 }
