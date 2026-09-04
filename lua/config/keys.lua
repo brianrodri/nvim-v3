@@ -91,6 +91,7 @@ return {
             { '<leader>fn', function() snacks_picker.notifications() end, desc = 'Find Notification' },
             { '<leader>fp', function() snacks_picker.pickers() end, desc = 'Find Picker' },
             { '<leader>fr', function() snacks_picker.recent() end, desc = 'Find Recent' },
+            { '<leader>fv', function() require('obsidian.picker').find_notes() end, desc = 'Find Notes' },
 
             { '<leader>g', group = 'git', icon = { icon = '󰊤 ', color = 'grey' } },
             { '<leader>gg', function() snacks_lazygit() end, desc = 'Lazygit' },
@@ -103,7 +104,7 @@ return {
             { '<leader>w', ':w!<cr>', desc = 'Write Buffer' },
 
             { '<leader>v', group = 'vault', icon = { icon = '󰇈 ', color = 'purple' } },
-            { '<leader>vn', function() require('obsidian.actions').new() end, desc = 'New Note' },
+            { '<leader>vn', function() require('obsidian.actions').new(nil, function(n) n:open() end) end, desc = 'New Note' },
             { '<leader>vs', function() require('obsidian.picker').grep_notes() end, desc = 'Grep Notes' },
             { '<leader>vf', function() require('obsidian.picker').find_notes() end, desc = 'Find Notes' },
             { '<leader>vt', function() require('obsidian.daily').today():open() end, desc = 'Daily Note' },
