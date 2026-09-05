@@ -1,3 +1,3 @@
-{ pkgs, lib, config, inputs, ... }:
+{ pkgs, ... }:
 
 { packages = [ pkgs.lua-language-server ]; }
