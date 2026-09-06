@@ -1,16 +1,16 @@
 return {
   {
-    'folke/snacks.nvim',
+    "folke/snacks.nvim",
     ---@module 'snacks'
     ---@type snacks.Config
     opts = {
       dashboard = {
         sections = {
-          { section = 'header' },
-          { section = 'keys', icon = '󰌌 ', indent = 2, padding = 1 },
-          { section = 'recent_files', icon = '󱋡 ', indent = 2, padding = 1, title = 'Recent Files', cwd = true },
-          { section = 'projects', icon = ' ', indent = 2, padding = 1, title = 'Recent Projects' },
-          { section = 'startup' },
+          { section = "header" },
+          { section = "keys", icon = "󰌌 ", indent = 2, padding = 1 },
+          { section = "recent_files", icon = "󱋡 ", indent = 2, padding = 1, title = "Recent Files", cwd = true },
+          { section = "projects", icon = " ", indent = 2, padding = 1, title = "Recent Projects" },
+          { section = "startup" },
         },
         preset = {
           header = [[
@@ -39,15 +39,15 @@ return {
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠉⠙⢿⣿⣿⣿⣿⣷⣶⣶⣿⠟⠁⠀⠀⠀⠀⠀⠉⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠛⠻⠿⠿⠟⠋⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀]],
           keys = {
-            { icon = '󰝒 ', key = 'n', desc = 'New File', action = ':enew' },
-            { icon = '󰱼 ', key = 'f', desc = 'Find File', action = '<leader>ff' },
-            { icon = '󱋡 ', key = 'r', desc = 'Find Recent', action = '<leader>fr' },
-            { icon = '󱁻 ', key = 'c', desc = 'Find Config', action = '<leader>fc' },
-            { icon = '󰇈 ', key = 'v', desc = 'Open Daily Note', action = '<leader>vt' },
-            { icon = '󱎸 ', key = '/', desc = 'Find Pattern', action = '<leader>f/' },
-            { icon = ' ', key = 'g', desc = 'Lazygit', action = '<leader>gg' },
-            { icon = '󰒲 ', key = 'l', desc = 'Lazy', action = '<leader>ll' },
-            { icon = ' ', key = 'q', desc = 'Quit', action = '<leader>qq' },
+            { icon = "󰝒 ", key = "n", desc = "New File", action = ":enew" },
+            { icon = "󰱼 ", key = "f", desc = "Find File", action = "<leader>ff" },
+            { icon = "󱋡 ", key = "r", desc = "Find Recent", action = "<leader>fr" },
+            { icon = "󱁻 ", key = "c", desc = "Find Config", action = "<leader>fc" },
+            { icon = "󰇈 ", key = "v", desc = "Open Daily Note", action = "<leader>vt" },
+            { icon = "󱎸 ", key = "/", desc = "Find Pattern", action = "<leader>f/" },
+            { icon = " ", key = "g", desc = "Lazygit", action = "<leader>gg" },
+            { icon = "󰒲 ", key = "l", desc = "Lazy", action = "<leader>ll" },
+            { icon = " ", key = "q", desc = "Quit", action = "<leader>qq" },
           },
         },
       },

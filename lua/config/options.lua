@@ -1,5 +1,6 @@
-vim.g.mapleader = ' '
+vim.g.mapleader = " "
 
+vim.opt.conceallevel = 2
 vim.opt.expandtab = true
 vim.opt.shiftwidth = 4
 vim.opt.number = true
