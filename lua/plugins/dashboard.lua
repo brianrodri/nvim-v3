@@ -7,7 +7,7 @@ return {
       return {
         dashboard = {
           sections = {
-            { text = my_braille_art.get_text_definition(), align = "center", padding = 2 },
+            { text = my_braille_art.render_text(), align = "center", padding = 2 },
             { section = "keys", icon = "󰌌 ", indent = 2, padding = 1 },
             { section = "recent_files", icon = "󱋡 ", indent = 2, padding = 1, title = "Recent Files", cwd = true },
             { section = "projects", icon = " ", indent = 2, padding = 1, title = "Recent Projects" },
