@@ -9,31 +9,23 @@ function M.set_palette_highlights()
     ["F"] = vim.tbl_extend("force", vim.api.nvim_get_hl(0, { name = "Red" }), { bold = true }),
     ["#"] = { link = "NonText" },
   }
-
   for mask, hl in pairs(hl_by_mask) do
     vim.api.nvim_set_hl(0, H.MASK_NAMES[mask], hl)
   end
 end
 
 function M.render_text()
-  local spans = {}
-
-  for line_num = 1, #H.ART_LINES do
-    if line_num > 1 then table.insert(spans, { "\n" }) end
-
-    local mask_line = H.MASK_LINES[line_num]
-    local beg_incl = 1
-
-    while beg_incl <= #mask_line do
-      local mask = mask_line:sub(beg_incl, beg_incl)
-      local _, end_incl = string.find(mask_line, mask .. "+", beg_incl)
-      local part = vim.fn.strcharpart(H.ART_LINES[line_num], beg_incl - 1, end_incl + 1 - beg_incl)
-      table.insert(spans, { part, hl = H.MASK_NAMES[mask] })
-      beg_incl = end_incl + 1
+  ---@module "snacks"
+  ---@type snacks.dashboard.Text[]
+  local dashboard_parts = {}
+  for y = 1, #H.ART_LINES do
+    for hl_mask, hl_beg_incl, hl_end_excl in H.scan_for_duplicate_chars(H.MASK_LINES[y]) do
+      local art_part = vim.fn.strcharpart(H.ART_LINES[y], hl_beg_incl, hl_end_excl - hl_beg_incl)
+      table.insert(dashboard_parts, { art_part, hl = H.MASK_NAMES[hl_mask] })
     end
+    if y < #H.ART_LINES then table.insert(dashboard_parts, { "\n" }) end
   end
-
-  return spans
+  return dashboard_parts
 end
 
 H.ART_LINES = {
@@ -103,5 +95,16 @@ H.MASK_NAMES = {
   ["F"] = "SouthWestFireFlames",
   ["#"] = "BorderSeparator",
 }
+
+function H.scan_for_duplicate_chars(line)
+  local x_pos, x_end = 1, #line
+  return function()
+    if x_pos > x_end then return end
+    local mask = line:sub(x_pos, x_pos)
+    local pos_beg_incl, pos_end_incl = string.find(line, mask .. "+", x_pos)
+    x_pos = pos_end_incl + 1
+    return mask, pos_beg_incl - 1, pos_end_incl
+  end
+end
 
 return M
