@@ -3,10 +3,18 @@ return {
   modified = "󰏫",
   close = "󱎘",
 
+  -- NOTE: Octicons carry a purpose-built diff family, so git status keeps that set rather than
+  -- the `nf-md-*` glyphs used everywhere else.
   git_symbols = {
-    added = "󰐖",
-    modified = "󰏬",
-    removed = "󰍵",
+    added = "",
+    modified = "",
+    removed = "",
+    copied = "",
+    renamed = "",
+    type_changed = "",
+    unmerged = "",
+    untracked = "",
+    ignored = "",
   },
 
   diagnostics = {
