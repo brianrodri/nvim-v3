@@ -1,4 +1,5 @@
-vim.cmd([[ xnoremap <expr> p 'pgv''.v:register.'y' ]])
+-- Make visual-mode `p` behave like builtin `P`: put without clobbering the register (:h v_P).
+vim.keymap.set("x", "p", "P")
 
 ---@param towards_eof boolean?
 ---@param severity vim.diagnostic.Severity?
