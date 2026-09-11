@@ -32,7 +32,6 @@ return {
   file = "󰝰",
   branch = "󰘬",
   lsp = "󰣖",
-  location = "󰆤",
   progress = "󰏰",
 
   keymaps = "󰌌",

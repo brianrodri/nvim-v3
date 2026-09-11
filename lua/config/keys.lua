@@ -204,6 +204,20 @@ local function put_linewise(keys)
   end
 end
 
+--- Gives a Trouble mode a mapping in both groups it belongs to, so it reads the same from either
+--- prefix: `<leader>xc` is mirrored as `<leader>cx`, and `<leader>xC` as `<leader>cX`. The suffix
+--- letter names the sibling group; its case selects the variant and stays on the final character.
+---@param key string the suffix under `<leader>x`, e.g. `"c"` or `"F"`.
+---@param cmd string
+---@param desc string
+local function trouble_mirror(key, cmd, desc)
+  local group = key:lower()
+  return {
+    { "<leader>x" .. key, cmd, desc = desc },
+    { "<leader>" .. group .. (key == group and "x" or "X"), cmd, desc = desc },
+  }
+end
+
 local icons = require("my.icons")
 
 return {
@@ -259,6 +273,9 @@ return {
       { "[n", conflict_jump(true), desc = "Prev Conflict", mode = "n" },
       { "]n", conflict_motion(), desc = "Next Conflict", mode = "o" },
       { "[n", conflict_motion(true), desc = "Prev Conflict", mode = "o" },
+
+      { "]t", function() require("todo-comments").jump_next() end, desc = "Next Todo Comment" },
+      { "[t", function() require("todo-comments").jump_prev() end, desc = "Prev Todo Comment" },
 
       { "]p", put_linewise("]p"), desc = "Put Below (linewise)" },
       { "[p", put_linewise("[p"), desc = "Put Above (linewise)" },
@@ -339,6 +356,16 @@ return {
       { "<leader>vf", function() require("obsidian.picker").find_notes() end, desc = "Find Notes" },
       { "<leader>vt", function() require("obsidian.daily").today():open() end, desc = "Daily Note" },
       { "<leader>vr", function() require("snacks.picker").recent() end, desc = "Recent Notes" },
+
+      { "<leader>x", group = "trouble" },
+      { "<leader>xx", ":Trouble diagnostics toggle<cr>", desc = "Diagnostics" },
+      { "<leader>xX", ":Trouble diagnostics toggle filter.buf=0<cr>", desc = "Buffer Diagnostics" },
+      -- No quickfix entry: `qflist` opens itself, and `]q`/`[q` already step it.
+      { "<leader>xl", ":Trouble loclist toggle<cr>", desc = "Location List" },
+      trouble_mirror("c", ":Trouble symbols toggle<cr>", "Symbols"),
+      trouble_mirror("C", ":Trouble lsp toggle<cr>", "LSP References"),
+      trouble_mirror("f", ":Trouble todo toggle<cr>", "Todo Comments"),
+      trouble_mirror("F", ":Trouble todo toggle filter = {tag = {TODO,FIX,FIXME}}<cr>", "Todo/Fix/Fixme"),
     })
   end,
 
