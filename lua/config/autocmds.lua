@@ -13,6 +13,18 @@ vim.api.nvim_create_autocmd("LspAttach", {
 })
 
 vim.api.nvim_create_autocmd("FileType", {
+  group = vim.api.nvim_create_augroup("my.treesitter.key-bindings", { clear = true }),
+  callback = function(ev)
+    -- The `]f`/`]c` motions need both a parser and this language's `textobjects.scm`; coverage is
+    -- per-language, so bind them only where they can actually resolve a capture.
+    local lang = vim.treesitter.language.get_lang(ev.match)
+    if not lang or not vim.iter(require("nvim-treesitter").get_installed()):find(lang) then return end
+    if not vim.treesitter.query.get(lang, "textobjects") then return end
+    require("config.keys").on_treesitter_attach(ev.buf)
+  end,
+})
+
+vim.api.nvim_create_autocmd("FileType", {
   group = vim.api.nvim_create_augroup("MyTreesitterHighlight", { clear = true }),
   callback = function(ev)
     local nvim_treesitter = require("nvim-treesitter")

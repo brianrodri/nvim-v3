@@ -13,6 +13,197 @@ local function diagnostic_jump(towards_eof, severity)
   end
 end
 
+-- The `]`/`[` families below are the only parts of `vim-unimpaired` that Neovim does not already
+-- ship, which is what let the plugin go. `:h default-mappings` covers `]q`/`]l`/`]b`/`]a`/`]t` and
+-- `]<Space>` natively, so they are deliberately absent here. Also not carried over: `[e`/`]e` (move
+-- line, lost to Next/Prev Error above), `[f`/`]f` (directory, now treesitter function motions), and
+-- the `[x`/`[u`/`[y`/`[C` encode operators.
+
+-- A diff hunk header or a merge conflict marker: what unimpaired's `]n`/`[n` searched for.
+local conflict_pattern = [[^\(@@ .* @@\|[<=>|]\{7}[<=>|]\@!\)]]
+
+---@param reverse boolean?
+local function conflict_jump(reverse)
+  return function() vim.fn.search(conflict_pattern, reverse and "bW" or "W") end
+end
+
+--- Selects the enclosing diff hunk or conflict block, so `]n`/`[n` stay usable as operator-pending
+--- motions (`d]n`, `y[n`) and not just cursor jumps.
+---@param reverse boolean?
+local function conflict_motion(reverse)
+  return function()
+    if reverse then vim.cmd("normal! -") end
+    vim.fn.search([[^@@ .* @@\|^diff \|^[<=>|]\{7}[<=>|]\@!]], "bWc")
+
+    local line, last = vim.fn.getline("."), vim.fn.line("$")
+    local stop ---@type integer?
+    if line:match("^diff ") then
+      stop = vim.fn.search([[^diff ]], "Wn") - 1
+    elseif line:match("^@@ ") then
+      stop = vim.fn.search([[^@@ .* @@\|^diff ]], "Wn") - 1
+    elseif vim.fn.match(line, [[^=\{7}]]) >= 0 then
+      vim.cmd("normal! +")
+      stop = vim.fn.search([[^>\{7}>\@!]], "Wnc")
+    elseif vim.fn.match(line, [[^[<=>|]\{7}[<=>|]\@!]]) >= 0 then
+      stop = vim.fn.search([[^[<=>|]\{7}[<=>|]\@!]], "Wn") - 1
+    else
+      return
+    end
+    if stop < 0 then stop = last end
+
+    local from = vim.fn.line(".")
+    if stop > from then
+      vim.cmd("normal! V" .. (stop - from) .. "j")
+    elseif stop == from then
+      vim.cmd("normal! V")
+    end
+  end
+end
+
+-- `:h 'hlsearch'` and `:h 'ignorecase'` are global; unimpaired set those with `:set` and the rest
+-- with `:setlocal`, which is what keeps a toggle from leaking into every other window.
+local global_options = { hlsearch = true, ignorecase = true }
+
+---@param names string[] set together, so `yox` can drive cursorline and cursorcolumn as a pair.
+---@param value boolean? omitted to flip the current value.
+local function set_options(names, value)
+  return function()
+    for _, name in ipairs(names) do
+      local scope = global_options[name] and vim.opt or vim.opt_local
+      -- Not a `and`/`or` ternary: flipping a currently-enabled option yields `false`, which would
+      -- fall through to `value` and set `nil`.
+      if value == nil then
+        scope[name] = not vim.o[name]
+      else
+        scope[name] = value
+      end
+    end
+  end
+end
+
+---@param names string[]
+---@return { on: fun(), off: fun(), toggle: fun(), desc: string }
+local function option_toggle(names)
+  return {
+    on = set_options(names, true),
+    off = set_options(names, false),
+    toggle = set_options(names),
+    desc = table.concat(names, " + "),
+  }
+end
+
+---@param on string ex command enabling the option.
+---@param off string ex command disabling it.
+---@param enabled fun(): boolean
+---@param desc string
+---@return { on: fun(), off: fun(), toggle: fun(), desc: string }
+local function command_toggle(on, off, enabled, desc)
+  return {
+    on = function() vim.cmd(on) end,
+    off = function() vim.cmd(off) end,
+    toggle = function() vim.cmd(enabled() and off or on) end,
+    desc = desc,
+  }
+end
+
+-- Restores whatever `:h 'colorcolumn'` was set to before `]ot` cleared it.
+local saved_colorcolumn = vim.o.colorcolumn
+
+---@type table<string, { on: fun(), off: fun(), toggle: fun(), desc: string }>
+local option_toggles = {
+  b = command_toggle(
+    "set background=light",
+    "set background=dark",
+    function() return vim.o.background == "light" end,
+    "light background"
+  ),
+  c = option_toggle({ "cursorline" }),
+  ["-"] = option_toggle({ "cursorline" }),
+  ["_"] = option_toggle({ "cursorline" }),
+  d = command_toggle("diffthis", "diffoff", function() return vim.wo.diff end, "diff"),
+  h = option_toggle({ "hlsearch" }),
+  i = option_toggle({ "ignorecase" }),
+  l = option_toggle({ "list" }),
+  n = option_toggle({ "number" }),
+  r = option_toggle({ "relativenumber" }),
+  s = option_toggle({ "spell" }),
+  u = option_toggle({ "cursorcolumn" }),
+  ["|"] = option_toggle({ "cursorcolumn" }),
+  v = command_toggle(
+    "set virtualedit+=all",
+    "set virtualedit-=all",
+    function() return vim.o.virtualedit:find("all") ~= nil end,
+    "virtualedit"
+  ),
+  w = option_toggle({ "wrap" }),
+  x = option_toggle({ "cursorline", "cursorcolumn" }),
+  ["+"] = option_toggle({ "cursorline", "cursorcolumn" }),
+  t = {
+    on = function() vim.opt_local.colorcolumn = saved_colorcolumn ~= "" and saved_colorcolumn or "+1" end,
+    off = function()
+      if vim.o.colorcolumn ~= "" then saved_colorcolumn = vim.o.colorcolumn end
+      vim.opt_local.colorcolumn = ""
+    end,
+    toggle = function() end, -- replaced below, once `on`/`off` exist to call.
+    desc = "colorcolumn",
+  },
+}
+option_toggles.t.toggle = function()
+  if vim.o.colorcolumn == "" then
+    option_toggles.t.on()
+  else
+    option_toggles.t.off()
+  end
+end
+
+--- Expands `option_toggles` into unimpaired's three prefixes: `[o` enables, `]o` disables, `yo`
+--- flips.
+local function option_toggle_keys()
+  local keys = {
+    { "[o", group = "enable option" },
+    { "]o", group = "disable option" },
+    { "yo", group = "toggle option" },
+    { "yo<Esc>", "<Nop>", hidden = true },
+  }
+  for letter, spec in pairs(option_toggles) do
+    vim.list_extend(keys, {
+      { "[o" .. letter, spec.on, desc = "Enable " .. spec.desc },
+      { "]o" .. letter, spec.off, desc = "Disable " .. spec.desc },
+      { "yo" .. letter, spec.toggle, desc = "Toggle " .. spec.desc },
+    })
+  end
+  return keys
+end
+
+--- Coerces the register to linewise before the builtin indent-adjusting put, which is the whole of
+--- what unimpaired's `[p`/`]p` added on top of `:h ]p`.
+---@param keys "[p"|"]p"
+local function put_linewise(keys)
+  return function()
+    local register = vim.v.register
+    local body, kind = vim.fn.getreg(register), vim.fn.getregtype(register)
+
+    -- `:`, `%` and `.` are read-only, so stage their contents in the unnamed register instead.
+    local restore ---@type [string, string]?
+    if register:match("[:%%.]") then
+      restore = { vim.fn.getreg('"'), vim.fn.getregtype('"') }
+      register = '"'
+      vim.fn.setreg(register, body, kind)
+    end
+
+    local put = ('normal! "%s%d%s'):format(register, vim.v.count1, keys)
+    if kind == "V" then
+      vim.cmd(put)
+    else
+      vim.fn.setreg(register, body, "l")
+      vim.cmd(put)
+      vim.fn.setreg(register, body, kind)
+    end
+
+    if restore then vim.fn.setreg('"', restore[1], restore[2]) end
+  end
+end
+
 local icons = require("my.icons")
 
 return {
@@ -62,6 +253,19 @@ return {
       { "[e", diagnostic_jump(false, vim.diagnostic.severity.ERROR), desc = "Prev Error" },
       { "]w", diagnostic_jump(true, vim.diagnostic.severity.WARN), desc = "Next Warning" },
       { "[w", diagnostic_jump(false, vim.diagnostic.severity.WARN), desc = "Prev Warning" },
+
+      -- nvim-treesitter owns `[n`/`]n` in visual mode, so these claim normal and operator-pending.
+      { "]n", conflict_jump(), desc = "Next Conflict", mode = "n" },
+      { "[n", conflict_jump(true), desc = "Prev Conflict", mode = "n" },
+      { "]n", conflict_motion(), desc = "Next Conflict", mode = "o" },
+      { "[n", conflict_motion(true), desc = "Prev Conflict", mode = "o" },
+
+      { "]p", put_linewise("]p"), desc = "Put Below (linewise)" },
+      { "[p", put_linewise("[p"), desc = "Put Above (linewise)" },
+      { "]P", put_linewise("]p"), desc = "Put Below (linewise)" },
+      { "[P", put_linewise("[p"), desc = "Put Above (linewise)" },
+
+      option_toggle_keys(),
 
       { "<leader>d", group = "debug" },
       { "<leader>dg", function() require("dap").continue() end, desc = "Start/Resume" },
@@ -153,6 +357,37 @@ return {
         { "<leader>ct", function() vim.lsp.buf.typehierarchy("subtypes") end, desc = "Subtypes" },
         { "<leader>cT", function() vim.lsp.buf.typehierarchy("supertypes") end, desc = "Supertypes" },
       },
+    })
+  end,
+
+  on_treesitter_attach = function(bufnr)
+    local move = require("nvim-treesitter-textobjects.move")
+    local which_key = require("which-key")
+
+    ---@param method "goto_next_start"|"goto_next_end"|"goto_previous_start"|"goto_previous_end"
+    ---@param query string a capture from `textobjects.scm`, e.g. `"@function.outer"`.
+    ---@param lhs string
+    local function goto_textobject(method, query, lhs)
+      return function()
+        -- `[c`/`]c` are `:h :diffthis` navigation first; only steal them outside a diff window.
+        if vim.wo.diff and lhs:find("[cC]") then return vim.cmd("normal! " .. lhs) end
+        move[method](query, "textobjects")
+      end
+    end
+
+    which_key.add({
+      buffer = bufnr,
+      mode = { "n", "x", "o" },
+
+      { "]f", goto_textobject("goto_next_start", "@function.outer", "]f"), desc = "Next Function" },
+      { "[f", goto_textobject("goto_previous_start", "@function.outer", "[f"), desc = "Prev Function" },
+      { "]F", goto_textobject("goto_next_end", "@function.outer", "]F"), desc = "Next Function End" },
+      { "[F", goto_textobject("goto_previous_end", "@function.outer", "[F"), desc = "Prev Function End" },
+
+      { "]c", goto_textobject("goto_next_start", "@class.outer", "]c"), desc = "Next Class" },
+      { "[c", goto_textobject("goto_previous_start", "@class.outer", "[c"), desc = "Prev Class" },
+      { "]C", goto_textobject("goto_next_end", "@class.outer", "]C"), desc = "Next Class End" },
+      { "[C", goto_textobject("goto_previous_end", "@class.outer", "[C"), desc = "Prev Class End" },
     })
   end,
 
