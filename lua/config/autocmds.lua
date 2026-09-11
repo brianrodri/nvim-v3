@@ -12,11 +12,6 @@ vim.api.nvim_create_autocmd("LspAttach", {
   end,
 })
 
-vim.api.nvim_create_autocmd("ColorScheme", {
-  group = vim.api.nvim_create_augroup("MyBrailleArtPalette", { clear = true }),
-  callback = function() require("my.braille-art").set_palette_highlights() end,
-})
-
 vim.api.nvim_create_autocmd("FileType", {
   group = vim.api.nvim_create_augroup("MyTreesitterHighlight", { clear = true }),
   callback = function(ev)

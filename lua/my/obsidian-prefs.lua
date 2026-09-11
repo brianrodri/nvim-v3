@@ -5,6 +5,7 @@ local SEC_PER_HOUR = 60 * SEC_PER_MIN
 local SECONDS_PER_DAY = 24 * SEC_PER_HOUR
 local BASE36_DIGITS_PER_DAY = math.ceil(math.log(SECONDS_PER_DAY, #BASE36_DIGIT_CHARS))
 
+---@module 'obsidian'
 ---@param path obsidian.Path
 local function default_frontmatter(path)
   if vim.iter(path and path:parents() or {}):any(function(p) return vim.endswith(tostring(p), "tasks") end) then

@@ -12,6 +12,8 @@ local function diagnostic_jump(towards_eof, severity)
   end
 end
 
+local icons = require("my.icons")
+
 return {
   on_lazy_attach = function()
     local oil = require("oil")
@@ -51,7 +53,7 @@ return {
       { "<leader>b", group = "buffer" },
       { "<leader>bd", ":bd!<cr>", desc = "Delete Buffer" },
 
-      { "<leader>c", group = "code", icon = " " },
+      { "<leader>c", group = "code", icon = icons.code .. " " },
       { "<leader>cd", vim.diagnostic.open_float, desc = "Line Diagnostics" },
       { "]d", diagnostic_jump(true), desc = "Next Diagnostic" },
       { "[d", diagnostic_jump(false), desc = "Prev Diagnostic" },
@@ -60,7 +62,7 @@ return {
       { "]w", diagnostic_jump(true, vim.diagnostic.severity.WARN), desc = "Next Warning" },
       { "[w", diagnostic_jump(false, vim.diagnostic.severity.WARN), desc = "Prev Warning" },
 
-      { "<leader>d", group = "debug", icon = { icon = " ", color = "red" } },
+      { "<leader>d", group = "debug" },
       { "<leader>dg", function() require("dap").continue() end, desc = "Start/Resume" },
       { "<leader>d.", function() require("dap").run_last() end, desc = "Restart" },
       { "<leader>db", function() require("dap").toggle_breakpoint() end, desc = "Toggle Breakpoint" },
@@ -110,17 +112,17 @@ return {
       { "<leader>fr", function() snacks_picker.recent() end, desc = "Find Recent" },
       { "<leader>fv", function() require("obsidian.picker").find_notes() end, desc = "Find Notes" },
 
-      { "<leader>g", group = "git", icon = { icon = "󰊤 ", color = "grey" } },
+      { "<leader>g", group = "git" },
       { "<leader>gg", function() snacks_lazygit() end, desc = "Lazygit" },
 
-      { "<leader>l", group = "lazy", icon = { icon = "󰒲 ", color = "azure" } },
+      { "<leader>l", group = "lazy" },
       { "<leader>ll", ":Lazy<CR>", desc = "Lazy" },
 
       { "<leader>q", ":qa!<cr>", desc = "Quit" },
 
       { "<leader>w", ":w!<cr>", desc = "Write Buffer" },
 
-      { "<leader>v", group = "vault", icon = { icon = "󰇈 ", color = "purple" } },
+      { "<leader>v", group = "vault", icon = { icon = icons.vault .. " ", color = "purple" } },
       {
         "<leader>vn",
         function()
@@ -165,7 +167,7 @@ return {
         finder = "git_branches",
         format = "git_branch",
         preview = "git_log",
-        title = "Change Base  ",
+        title = "Change Base " .. icons.change_base .. " ",
         confirm = function(picker, item)
           picker:close()
           if not item then return end
@@ -184,7 +186,7 @@ return {
       { "]H", function() gitsigns.nav_hunk("last") end, desc = "Final Hunk" },
       { "ih", function() gitsigns.select_hunk() end, desc = "Select Hunk", mode = "no" },
 
-      { "<leader>h", group = "hunk", icon = { icon = " ", color = "purple" } },
+      { "<leader>h", group = "hunk", icon = { icon = icons.hunk .. " ", color = "purple" } },
       { "<leader>ha", function() gitsigns.stage_hunk() end, desc = "Stage Hunk" },
       { "<leader>hA", function() gitsigns.stage_buffer() end, desc = "Stage Buffer" },
       { "<leader>hr", function() gitsigns.reset_hunk() end, desc = "Reset Hunk" },
