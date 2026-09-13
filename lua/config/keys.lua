@@ -139,13 +139,14 @@ function M.on_treesitter_attach(ft_match, bufnr)
   local lang = vim.iter(nvim_treesitter.get_installed()):find(vim.treesitter.language.get_lang(ft_match))
   if not lang then return end
 
+  if vim.b[bufnr].my_textobject_lang == lang then return end
+  vim.b[bufnr].my_textobject_lang = lang
+
   vim.treesitter.start(bufnr, lang)
   vim.bo[bufnr].syntax = "ON"
   vim.wo[0][0].foldexpr = "v:lua.vim.treesitter.foldexpr()"
   vim.wo[0][0].foldmethod = "expr"
 
-  -- Parsers like `vimdoc` and `gitcommit` highlight and fold but ship no `textobjects` query, so the
-  -- motions below stay unbound for them.
   if not vim.treesitter.query.get(lang, "textobjects") then return end
 
   which_key.add({
@@ -162,7 +163,6 @@ function M.on_treesitter_attach(ft_match, bufnr)
     { "]A", function() H.goto_textobject("goto_next_end", "@parameter.inner") end, desc = "Next Argument End" },
     { "[A", function() H.goto_textobject("goto_previous_end", "@parameter.inner") end, desc = "Prev Argument End" },
 
-    -- Selections have no meaning in normal mode, where `i`/`a` are insert and append.
     {
       mode = { "x", "o" },
       { "af", function() H.select_textobject("@function.outer") end, desc = "Function" },
