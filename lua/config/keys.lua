@@ -18,7 +18,7 @@ function M.on_lazy_attach()
     -- Make visual-mode `p` behave like builtin `P`: put without clobbering the register (:h v_P).
     { "p", "P", mode = "x" },
 
-    { "-", function() oil.open() end, desc = "File Explorer (buffer)" },
+    { "-", oil.open, desc = "File Explorer (buffer)" },
     { "<esc>", ":nohlsearch<cr>", hidden = true },
 
     {
@@ -220,13 +220,9 @@ end
 ---@param towards_eof boolean?
 ---@param severity vim.diagnostic.Severity?
 function H.diagnostic_jump(towards_eof, severity)
-  return function()
-    vim.diagnostic.jump({
-      count = (towards_eof and 1 or -1) * vim.v.count1,
-      severity = severity and vim.diagnostic.severity[severity] or nil,
-      float = true,
-    })
-  end
+  local count = towards_eof and 1 or -1
+  severity = severity and vim.diagnostic.severity[severity] or nil
+  return function() vim.diagnostic.jump({ count = count * vim.v.count1, severity = severity, float = true }) end
 end
 
 ---@param widget "frames"|"scopes"
