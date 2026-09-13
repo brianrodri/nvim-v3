@@ -27,6 +27,7 @@ return {
     opts = {
       view_options = { show_hidden = true },
       win_options = { signcolumn = "auto:2" },
+      watch_for_changes = true,
     },
   },
 
