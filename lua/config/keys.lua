@@ -139,15 +139,15 @@ function M.on_treesitter_attach(ft_match, bufnr)
   local lang = vim.iter(nvim_treesitter.get_installed()):find(vim.treesitter.language.get_lang(ft_match))
   if not lang then return end
 
-  if vim.b[bufnr].my_textobject_lang == lang then return end
-  vim.b[bufnr].my_textobject_lang = lang
-
   vim.treesitter.start(bufnr, lang)
   vim.bo[bufnr].syntax = "ON"
   vim.wo[0][0].foldexpr = "v:lua.vim.treesitter.foldexpr()"
   vim.wo[0][0].foldmethod = "expr"
 
   if not vim.treesitter.query.get(lang, "textobjects") then return end
+
+  if vim.b[bufnr].my_textobject_lang == lang then return end
+  vim.b[bufnr].my_textobject_lang = lang
 
   which_key.add({
     buffer = bufnr,
