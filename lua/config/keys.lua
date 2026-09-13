@@ -162,6 +162,17 @@ function M.on_treesitter_attach(ft_match, bufnr)
     { "]A", function() H.goto_textobject("goto_next_end", "@parameter.inner") end, desc = "Next Argument End" },
     { "[A", function() H.goto_textobject("goto_previous_end", "@parameter.inner") end, desc = "Prev Argument End" },
 
+    -- Selections have no meaning in normal mode, where `i`/`a` are insert and append.
+    {
+      mode = { "x", "o" },
+      { "af", function() H.select_textobject("@function.outer") end, desc = "Function" },
+      { "if", function() H.select_textobject("@function.inner") end, desc = "Inner Function" },
+      { "ac", function() H.select_textobject("@class.outer") end, desc = "Class" },
+      { "ic", function() H.select_textobject("@class.inner") end, desc = "Inner Class" },
+      { "aa", function() H.select_textobject("@parameter.outer") end, desc = "Argument" },
+      { "ia", function() H.select_textobject("@parameter.inner") end, desc = "Inner Argument" },
+    },
+
     {
       cond = function() return not vim.wo.diff end,
       { "]c", function() H.goto_textobject("goto_next_start", "@class.outer") end, desc = "Next Class" },
@@ -251,6 +262,12 @@ end
 function H.goto_textobject(method, query)
   local textobjects_move = require("nvim-treesitter-textobjects.move")
   textobjects_move[method](query, "textobjects")
+end
+
+---@param query string a capture from `textobjects.scm`, e.g. `"@parameter.inner"`.
+function H.select_textobject(query)
+  local textobjects_select = require("nvim-treesitter-textobjects.select")
+  textobjects_select.select_textobject(query, "textobjects")
 end
 
 ---@param global boolean whether to change the base of all buffers.
