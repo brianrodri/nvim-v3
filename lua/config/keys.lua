@@ -33,6 +33,7 @@ function M.on_lazy_attach()
     { "<esc>", ":nohlsearch<cr>", hidden = true },
 
     {
+      hidden = true,
       { "<leader><C-h>", ":leftabove vsplit<CR>", desc = "New Left Split" },
       { "<leader><C-j>", ":rightbelow split<CR>", desc = "New Bottom Split" },
       { "<leader><C-k>", ":leftabove split<CR>", desc = "New Top Split" },
