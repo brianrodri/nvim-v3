@@ -167,6 +167,47 @@ return {
     })
   end,
 
+  on_treesitter_attach = function(ft_match, bufnr)
+    local nvim_treesitter = require("nvim-treesitter")
+    local move = require("nvim-treesitter-textobjects.move")
+    local which_key = require("which-key")
+
+    local lang = vim.iter(nvim_treesitter.get_installed()):find(vim.treesitter.language.get_lang(ft_match))
+    if not lang then return end
+
+    vim.treesitter.start(bufnr, lang)
+    vim.bo[bufnr].syntax = "ON"
+    vim.wo[0][0].foldexpr = "v:lua.vim.treesitter.foldexpr()"
+    vim.wo[0][0].foldmethod = "expr"
+
+    -- Parsers like `vimdoc` and `gitcommit` highlight and fold but ship no `textobjects` query, so the
+    -- motions below stay unbound for them.
+    if not vim.treesitter.query.get(lang, "textobjects") then return end
+
+    ---@param method "goto_next_start"|"goto_next_end"|"goto_previous_start"|"goto_previous_end"
+    ---@param query string a capture from `textobjects.scm`, e.g. `"@function.outer"`.
+    local function goto_textobject(method, query) move[method](query, "textobjects") end
+
+    which_key.add({
+      buffer = bufnr,
+      mode = { "n", "x", "o" },
+
+      { "]f", function() goto_textobject("goto_next_start", "@function.outer") end, desc = "Next Function" },
+      { "[f", function() goto_textobject("goto_previous_start", "@function.outer") end, desc = "Prev Function" },
+      { "]F", function() goto_textobject("goto_next_end", "@function.outer") end, desc = "Next Function End" },
+      { "[F", function() goto_textobject("goto_previous_end", "@function.outer") end, desc = "Prev Function End" },
+
+      -- `[c`/`]c` are `:h :diffthis` navigation first, so leave them alone inside a diff window.
+      {
+        cond = function() return not vim.wo.diff end,
+        { "]c", function() goto_textobject("goto_next_start", "@class.outer") end, desc = "Next Class" },
+        { "[c", function() goto_textobject("goto_previous_start", "@class.outer") end, desc = "Prev Class" },
+        { "]C", function() goto_textobject("goto_next_end", "@class.outer") end, desc = "Next Class End" },
+        { "[C", function() goto_textobject("goto_previous_end", "@class.outer") end, desc = "Prev Class End" },
+      },
+    })
+  end,
+
   on_gitsigns_attach = function(bufnr)
     local gitsigns = require("gitsigns")
     local snacks_picker = require("snacks.picker")

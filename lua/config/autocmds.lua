@@ -13,13 +13,6 @@ vim.api.nvim_create_autocmd("LspAttach", {
 })
 
 vim.api.nvim_create_autocmd("FileType", {
-  group = vim.api.nvim_create_augroup("MyTreesitterHighlight", { clear = true }),
-  callback = function(ev)
-    local nvim_treesitter = require("nvim-treesitter")
-    if not vim.iter(nvim_treesitter.get_installed()):find(ev.match) then return end
-    vim.treesitter.start(ev.buf, ev.match)
-    vim.bo[ev.buf].syntax = "ON"
-    vim.wo[0][0].foldexpr = "v:lua.vim.treesitter.foldexpr()"
-    vim.wo[0][0].foldmethod = "expr"
-  end,
+  group = vim.api.nvim_create_augroup("my.treesitter.key-bindings", { clear = true }),
+  callback = function(ev) require("config.keys").on_treesitter_attach(ev.match, ev.buf) end,
 })
