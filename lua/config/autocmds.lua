@@ -1,7 +1,10 @@
 vim.api.nvim_create_autocmd("User", {
   group = vim.api.nvim_create_augroup("my.key-bindings", { clear = true }),
   pattern = "VeryLazy",
-  callback = function() require("config.keys").on_lazy_attach() end,
+  callback = function()
+    require("config.keys").on_lazy_attach()
+    require("config.keys").setup_snacks_toggle_keymaps()
+  end,
 })
 
 vim.api.nvim_create_autocmd("LspAttach", {

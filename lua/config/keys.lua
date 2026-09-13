@@ -21,23 +21,6 @@ return {
     local snacks_lazygit = require("snacks.lazygit")
     local snacks_picker = require("snacks.picker")
     local which_key = require("which-key")
-    local snacks_toggle = require("snacks.toggle")
-
-    snacks_toggle.option("spell", { name = "Spelling" }):map("<leader>us")
-    snacks_toggle.option("wrap", { name = "Wrap" }):map("<leader>uw")
-    snacks_toggle.option("relativenumber", { name = "Relative Number" }):map("<leader>uL")
-    snacks_toggle.diagnostics():map("<leader>ud")
-    snacks_toggle.line_number():map("<leader>ul")
-    snacks_toggle.option("conceallevel", { off = 0, on = 2, name = "Conceal Level" }):map("<leader>uc")
-    snacks_toggle.option("showtabline", { off = 0, on = 2, name = "Tabline" }):map("<leader>uA")
-    snacks_toggle.treesitter():map("<leader>uT")
-    snacks_toggle.option("background", { off = "light", on = "dark", name = "Dark Background" }):map("<leader>ub")
-    snacks_toggle.dim():map("<leader>uD")
-    snacks_toggle.animate():map("<leader>ua")
-    snacks_toggle.indent():map("<leader>ug")
-    snacks_toggle.scroll():map("<leader>uS")
-    snacks_toggle.profiler():map("<leader>dpp")
-    snacks_toggle.profiler_highlights():map("<leader>dph")
 
     which_key.add({
       { "-", function() oil.open() end, desc = "File Explorer (buffer)" },
@@ -249,5 +232,30 @@ return {
       { "<leader>hb", function() pick_gitsigns_branch(true) end, desc = "Change Base (Global)" },
       { "<leader>hB", function() pick_gitsigns_branch(false) end, desc = "Change Base (Buffer)" },
     })
+  end,
+
+  setup_snacks_toggle_keymaps = function()
+    local snacks_toggle = require("snacks.toggle")
+
+    snacks_toggle.option("spell", { name = "Spelling" }):map("<leader>us")
+    snacks_toggle.option("wrap", { name = "Wrap" }):map("<leader>uw")
+    snacks_toggle.option("relativenumber", { name = "Relative Number" }):map("<leader>uL")
+    snacks_toggle.diagnostics():map("<leader>ud")
+    snacks_toggle.line_number():map("<leader>ul")
+    snacks_toggle.option("conceallevel", { off = 0, on = 2, name = "Conceal Level" }):map("<leader>uc")
+    snacks_toggle.option("showtabline", { off = 0, on = 2, name = "Tabline" }):map("<leader>uA")
+    snacks_toggle.treesitter():map("<leader>uT")
+    snacks_toggle.option("background", { off = "light", on = "dark", name = "Dark Background" }):map("<leader>ub")
+    snacks_toggle.dim():map("<leader>uD")
+    snacks_toggle.animate():map("<leader>ua")
+    snacks_toggle.scroll():map("<leader>uS")
+    snacks_toggle
+      .new({
+        id = "gitsigns",
+        name = "Git Signs",
+        set = function(state) require("gitsigns").toggle_signs(state) end,
+        get = function() return require("gitsigns.config").config.signcolumn end,
+      })
+      :map("<leader>ug")
   end,
 }
