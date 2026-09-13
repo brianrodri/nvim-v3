@@ -1,17 +1,19 @@
-local function with_format(fmt, inner)
+local function runtime_format(fmt, inner)
   return function(buf) return string.format(fmt, inner(buf)) end
 end
 
-local function with_focus_alt(focus_alt, unfocused_alt)
-  return function(buf) return buf.is_focused and focus_alt or unfocused_alt end
-end
-
-local function with_diagnostic_overrides(fallback, error_val, warning_val)
+local function runtime_choice(opts)
   return function(buf)
-    if buf.diagnostics.errors > 0 then return error_val end
-    if buf.diagnostics.warnings > 0 then return warning_val end
-    if vim.is_callable(fallback) then return fallback(buf) end
-    return fallback
+    local choice = opts[1]
+    if opts.error and buf.diagnostics.errors > 0 then
+      choice = opts.error
+    elseif opts.warning and buf.diagnostics.warnings > 0 then
+      choice = opts.warning
+    elseif opts.focused and buf.is_focused then
+      choice = opts.focused
+    end
+    if vim.is_callable(choice) then return choice(buf) end
+    return choice
   end
 end
 
@@ -36,19 +38,30 @@ return {
 
       return {
         default_hl = {
-          fg = with_focus_alt(fg.focused, fg.unfocused),
-          bg = with_focus_alt(bg.focused, bg.unfocused),
+          fg = runtime_choice({ fg.unfocused, focused = fg.focused }),
+          bg = runtime_choice({ bg.unfocused, focused = bg.focused }),
         },
 
         components = {
-          { text = with_focus_alt(my_icons.separators.left, " "), fg = bg.focused, bg = bg.unfocused },
           {
-            text = with_diagnostic_overrides(
-              function(buf) return " " .. buf.devicon.icon end,
-              " " .. my_icons.diagnostics.error .. " ",
-              " " .. my_icons.diagnostics.warn .. " "
+            text = runtime_choice({ " ", focused = my_icons.separators.left }),
+            fg = bg.focused,
+            bg = bg.unfocused,
+          },
+          {
+            text = runtime_format(
+              " %s",
+              runtime_choice({
+                function(buf) return buf.devicon.icon end,
+                error = my_icons.diagnostics.error .. " ",
+                warning = my_icons.diagnostics.warn .. " ",
+              })
             ),
-            fg = with_diagnostic_overrides(function(buf) return buf.devicon.color end, fg.error, fg.warning),
+            fg = runtime_choice({
+              function(buf) return buf.devicon.color end,
+              error = fg.error,
+              warning = fg.warning,
+            }),
           },
           {
             text = function(buf) return buf.unique_prefix end,
@@ -58,18 +71,22 @@ return {
           },
           {
             text = function(buf) return buf.filename end,
-            fg = with_diagnostic_overrides(fg.focused, fg.error, fg.warning),
+            fg = runtime_choice({ error = fg.error, warning = fg.warning }),
             truncation = { direction = "left" },
           },
           {
-            text = with_format(" %s ", function(buf)
+            text = runtime_format(" %s ", function(buf)
               if buf.is_readonly then return my_icons.readonly end
               if buf.is_modified then return my_icons.modified end
               return my_icons.close
             end),
             on_click = function(_, _, _, _, buf) buf:delete() end,
           },
-          { text = with_focus_alt(my_icons.separators.right .. " ", "  "), fg = bg.focused, bg = bg.unfocused },
+          {
+            text = runtime_format("%s ", runtime_choice({ " ", focused = my_icons.separators.right })),
+            fg = bg.focused,
+            bg = bg.unfocused,
+          },
         },
       }
     end,
