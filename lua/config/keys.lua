@@ -93,7 +93,7 @@ function M.on_lazy_attach()
 
     { "<leader>v", group = "vault", icon = { icon = my_icons.vault .. " ", color = "purple" } },
     { "<leader>vn", function() H.new_obsidian_note() end, desc = "New Note" },
-    { "<leader>vs", function() obsidian_picker.grep_notes() end, desc = "Grep Notes" },
+    { "<leader>v/", function() obsidian_picker.grep_notes() end, desc = "Grep Notes" },
     { "<leader>vf", function() obsidian_picker.find_notes() end, desc = "Find Notes" },
     { "<leader>vt", function() obsidian_daily.today():open() end, desc = "Daily Note" },
     { "<leader>vr", function() snacks_picker.recent() end, desc = "Recent Notes" },
