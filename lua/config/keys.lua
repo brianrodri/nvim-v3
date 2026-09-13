@@ -120,6 +120,12 @@ function M.on_lsp_attach(client_id, bufnr)
 
     { "<leader>cj", vim.lsp.buf.incoming_calls, desc = "Incoming Calls" },
     { "<leader>ck", vim.lsp.buf.outgoing_calls, desc = "Outgoing Calls" },
+    { "<leader>cs", ":Trouble symbols toggle focus=false<cr>", desc = "LSP Symbols" },
+    {
+      "<leader>cl",
+      "<cmd>Trouble lsp toggle focus=false win.position=right<cr>",
+      desc = "LSP Definitions, references, etc.",
+    },
 
     {
       cond = client and function() return client:supports_method("textDocument/prepareTypeHierarchy") end,
