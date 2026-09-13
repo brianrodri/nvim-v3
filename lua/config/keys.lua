@@ -63,6 +63,9 @@ return {
       { "]w", diagnostic_jump(true, vim.diagnostic.severity.WARN), desc = "Next Warning" },
       { "[w", diagnostic_jump(false, vim.diagnostic.severity.WARN), desc = "Prev Warning" },
 
+      { "]t", function() require("todo-comments").jump_next() end, desc = "Next Todo Comment" },
+      { "[t", function() require("todo-comments").jump_prev() end, desc = "Prev Todo Comment" },
+
       { "<leader>d", group = "debug" },
       { "<leader>dg", function() require("dap").continue() end, desc = "Start/Resume" },
       { "<leader>d.", function() require("dap").run_last() end, desc = "Restart" },
@@ -135,6 +138,14 @@ return {
       { "<leader>vf", function() require("obsidian.picker").find_notes() end, desc = "Find Notes" },
       { "<leader>vt", function() require("obsidian.daily").today():open() end, desc = "Daily Note" },
       { "<leader>vr", function() require("snacks.picker").recent() end, desc = "Recent Notes" },
+
+      { "<leader>x", group = "trouble" },
+      { "<leader>xt", ":Trouble todo toggle<cr>", desc = "Todo Comments" },
+      { "<leader>xT", ":Trouble todo toggle filter.buf=0<cr>", desc = "Todo Comments" },
+      { "<leader>xx", ":Trouble diagnostics toggle<cr>", desc = "Diagnostics" },
+      { "<leader>xX", ":Trouble diagnostics toggle filter.buf=0<cr>", desc = "Buffer Diagnostics" },
+      { "<leader>xq", ":Trouble quickfix toggle<cr>", desc = "Quickfix List" },
+      { "<leader>xl", ":Trouble loclist toggle<cr>", desc = "Location List" },
     })
   end,
 
