@@ -18,7 +18,7 @@ return {
     end,
   },
 
-  { import = "plugins.lsp" },
+  { import = "plugins.langs" },
 
   {
     "nvim-treesitter/nvim-treesitter",
