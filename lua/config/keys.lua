@@ -2,10 +2,16 @@ local M = {}
 local H = {}
 
 function M.on_lazy_attach()
+  local dap = require("dap")
+  local dap_ui_widgets = require("dap.ui.widgets")
+  local dapui = require("dapui")
   local my_icons = require("my.icons")
+  local obsidian_daily = require("obsidian.daily")
+  local obsidian_picker = require("obsidian.picker")
   local oil = require("oil")
   local snacks_lazygit = require("snacks.lazygit")
   local snacks_picker = require("snacks.picker")
+  local todo_comments = require("todo-comments")
   local which_key = require("which-key")
 
   which_key.add({
@@ -34,20 +40,20 @@ function M.on_lazy_attach()
     { "]w", H.diagnostic_jump(true, vim.diagnostic.severity.WARN), desc = "Next Warning" },
     { "[w", H.diagnostic_jump(false, vim.diagnostic.severity.WARN), desc = "Prev Warning" },
 
-    { "]t", function() require("todo-comments").jump_next() end, desc = "Next Todo Comment" },
-    { "[t", function() require("todo-comments").jump_prev() end, desc = "Prev Todo Comment" },
+    { "]t", function() todo_comments.jump_next() end, desc = "Next Todo Comment" },
+    { "[t", function() todo_comments.jump_prev() end, desc = "Prev Todo Comment" },
 
     { "<leader>d", group = "debug" },
-    { "<leader>dg", function() require("dap").continue() end, desc = "Start/Resume" },
-    { "<leader>d.", function() require("dap").run_last() end, desc = "Restart" },
-    { "<leader>db", function() require("dap").toggle_breakpoint() end, desc = "Toggle Breakpoint" },
-    { "<leader>du", function() require("dapui").toggle() end, desc = "Toggle UI" },
-    { "<leader>dl", function() require("dap").step_over() end, desc = "Step Over" },
-    { "<leader>dj", function() require("dap").step_into() end, desc = "Step Into" },
-    { "<leader>dk", function() require("dap").step_out() end, desc = "Step Out" },
-    { "<leader>dr", function() require("dap").repl.toggle() end, desc = "Toggle REPL" },
-    { "<leader>dK", function() require("dap.ui.widgets").hover() end, desc = "Show Hover", mode = { "n", "v" } },
-    { "<leader>dp", function() require("dap.ui.widgets").preview() end, desc = "Show Preview", mode = { "n", "v" } },
+    { "<leader>dg", function() dap.continue() end, desc = "Start/Resume" },
+    { "<leader>d.", function() dap.run_last() end, desc = "Restart" },
+    { "<leader>db", function() dap.toggle_breakpoint() end, desc = "Toggle Breakpoint" },
+    { "<leader>du", function() dapui.toggle() end, desc = "Toggle UI" },
+    { "<leader>dl", function() dap.step_over() end, desc = "Step Over" },
+    { "<leader>dj", function() dap.step_into() end, desc = "Step Into" },
+    { "<leader>dk", function() dap.step_out() end, desc = "Step Out" },
+    { "<leader>dr", function() dap.repl.toggle() end, desc = "Toggle REPL" },
+    { "<leader>dK", function() dap_ui_widgets.hover() end, desc = "Show Hover", mode = { "n", "v" } },
+    { "<leader>dp", function() dap_ui_widgets.preview() end, desc = "Show Preview", mode = { "n", "v" } },
     { "<leader>df", function() H.dap_centered_widget("frames") end, desc = "Show Frames" },
     { "<leader>ds", function() H.dap_centered_widget("scopes") end, desc = "Show Scopes" },
 
@@ -71,7 +77,7 @@ function M.on_lazy_attach()
     { "<leader>fn", function() snacks_picker.notifications() end, desc = "Find Notification" },
     { "<leader>fp", function() snacks_picker.pickers() end, desc = "Find Picker" },
     { "<leader>fr", function() snacks_picker.recent() end, desc = "Find Recent" },
-    { "<leader>fv", function() require("obsidian.picker").find_notes() end, desc = "Find Notes" },
+    { "<leader>fv", function() obsidian_picker.find_notes() end, desc = "Find Notes" },
 
     { "<leader>g", group = "git" },
     { "<leader>gg", function() snacks_lazygit() end, desc = "Lazygit" },
@@ -85,10 +91,10 @@ function M.on_lazy_attach()
 
     { "<leader>v", group = "vault", icon = { icon = my_icons.vault .. " ", color = "purple" } },
     { "<leader>vn", function() H.new_obsidian_note() end, desc = "New Note" },
-    { "<leader>vs", function() require("obsidian.picker").grep_notes() end, desc = "Grep Notes" },
-    { "<leader>vf", function() require("obsidian.picker").find_notes() end, desc = "Find Notes" },
-    { "<leader>vt", function() require("obsidian.daily").today():open() end, desc = "Daily Note" },
-    { "<leader>vr", function() require("snacks.picker").recent() end, desc = "Recent Notes" },
+    { "<leader>vs", function() obsidian_picker.grep_notes() end, desc = "Grep Notes" },
+    { "<leader>vf", function() obsidian_picker.find_notes() end, desc = "Find Notes" },
+    { "<leader>vt", function() obsidian_daily.today():open() end, desc = "Daily Note" },
+    { "<leader>vr", function() snacks_picker.recent() end, desc = "Recent Notes" },
 
     { "<leader>x", group = "trouble" },
     { "<leader>xt", ":Trouble todo toggle<cr>", desc = "Todo Comments" },
@@ -225,24 +231,29 @@ end
 
 ---@param widget "frames"|"scopes"
 function H.dap_centered_widget(widget)
-  local w = require("dap.ui.widgets")
-  w.centered_float(w[widget])
+  local dap_ui_widgets = require("dap.ui.widgets")
+  dap_ui_widgets.centered_float(dap_ui_widgets[widget])
 end
 
 function H.new_obsidian_note()
-  require("obsidian.actions").new(nil, function(n) n:open() end)
+  local obsidian_actions = require("obsidian.actions")
+  obsidian_actions.new(nil, function(n) n:open() end)
 end
 
 ---@param method "goto_next_start"|"goto_next_end"|"goto_previous_start"|"goto_previous_end"
 ---@param query string a capture from `textobjects.scm`, e.g. `"@function.outer"`.
-function H.goto_textobject(method, query) require("nvim-treesitter-textobjects.move")[method](query, "textobjects") end
+function H.goto_textobject(method, query)
+  local textobjects_move = require("nvim-treesitter-textobjects.move")
+  textobjects_move[method](query, "textobjects")
+end
 
 ---@param global boolean whether to change the base of all buffers.
 function H.pick_gitsigns_branch(global)
   local gitsigns = require("gitsigns")
   local my_icons = require("my.icons")
+  local snacks_picker = require("snacks.picker")
 
-  require("snacks.picker").pick({
+  snacks_picker.pick({
     all = true,
     finder = "git_branches",
     format = "git_branch",
