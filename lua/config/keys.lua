@@ -41,7 +41,10 @@ function M.setup_plugin_keymaps()
     },
 
     { "<leader>b", group = "buffer" },
+    { "<leader>bn", ":enew<cr>", desc = "New Buffer" },
     { "<leader>bd", ":bd!<cr>", desc = "Delete Buffer" },
+    { "<leader>bf", function() snacks_picker.buffers() end, desc = "Find Buffers" },
+    { "<leader>b/", function() snacks_picker.grep_buffers() end, desc = "Grep Buffers" },
 
     { "<leader>c", group = "code", icon = my_icons.code .. " " },
     { "<leader>cd", vim.diagnostic.open_float, desc = "Line Diagnostics" },
