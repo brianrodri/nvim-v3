@@ -23,4 +23,16 @@ return {
   {
     "mxsdev/nvim-dap-vscode-js",
   },
+
+  {
+    "stevearc/conform.nvim",
+    opts = {
+      formatters_by_ft = {
+        javascript = { "prettier" },
+        javascriptreact = { "prettier" },
+        typescript = { "prettier" },
+        typescriptreact = { "prettier" },
+      },
+    },
+  },
 }
