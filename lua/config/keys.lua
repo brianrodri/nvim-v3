@@ -15,6 +15,17 @@ function M.on_lazy_attach()
   local which_key = require("which-key")
 
   which_key.add({
+    {
+      "<leader>g",
+      function() snacks_lazygit() end,
+      desc = "Lazygit",
+      icon = { icon = my_icons.git, color = "orange" },
+    },
+    { "<leader>l", ":Lazy<CR>", desc = "Lazy", icon = { icon = my_icons.lazy, color = "blue" } },
+    { "<leader>q", ":qa!<cr>", desc = "Quit", icon = { icon = my_icons.close, color = "red" } },
+    { "<leader>e", ":e!<cr>", desc = "Reload", icon = { icon = my_icons.reload, color = "purple" } },
+    { "<leader>w", ":w!<cr>", desc = "Save", icon = { icon = my_icons.save, color = "green" } },
+
     -- Make visual-mode `p` behave like builtin `P`: put without clobbering the register (:h v_P).
     { "p", "P", mode = "x" },
 
@@ -78,16 +89,6 @@ function M.on_lazy_attach()
     { "<leader>fp", function() snacks_picker.pickers() end, desc = "Find Picker" },
     { "<leader>fr", function() snacks_picker.recent() end, desc = "Find Recent" },
     { "<leader>fv", function() obsidian_picker.find_notes() end, desc = "Find Notes" },
-
-    { "<leader>g", group = "git" },
-    { "<leader>gg", function() snacks_lazygit() end, desc = "Lazygit" },
-
-    { "<leader>l", group = "lazy" },
-    { "<leader>ll", ":Lazy<CR>", desc = "Lazy" },
-
-    { "<leader>q", ":qa!<cr>", desc = "Quit" },
-
-    { "<leader>w", ":w!<cr>", desc = "Write Buffer" },
 
     { "<leader>v", group = "vault", icon = { icon = my_icons.vault .. " ", color = "purple" } },
     { "<leader>vn", function() H.new_obsidian_note() end, desc = "New Note" },

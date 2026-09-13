@@ -2,6 +2,8 @@ return {
   readonly = "󰌾",
   modified = "󰏫",
   close = "󱎘",
+  save = "󰆓",
+  reload = "󰑐",
 
   git_symbols = {
     added = "",
