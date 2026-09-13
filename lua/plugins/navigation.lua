@@ -15,7 +15,6 @@ return {
           files = { hidden = true },
           explorer = { hidden = true },
         },
-        -- Sends the current results into Trouble, so a grep can become a persistent list.
         actions = {
           ---@diagnostic disable-next-line: undefined-field
           trouble_open = function(...) return require("trouble.sources.snacks").actions.trouble_open.action(...) end,

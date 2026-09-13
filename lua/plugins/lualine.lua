@@ -10,13 +10,7 @@ return {
     dependencies = {
       "folke/trouble.nvim",
     },
-    -- A function so `trouble.statusline()` is built once, at config time: it registers listeners and
-    -- caches its own rendering, so it must not be re-created per redraw.
     opts = function()
-      -- The symbol path the cursor sits inside. Trouble renders it with its own highlights and
-      -- joins one symbol to the next with an unhighlighted space, so it can only sit flush in a
-      -- section that has no background of its own. `everforest` leaves `c` bare, and lualine draws
-      -- `x` with the same groups -- hence `lualine_c_normal` for a component living in `x`.
       local symbols = require("trouble").statusline({
         mode = "symbols",
         groups = {},
