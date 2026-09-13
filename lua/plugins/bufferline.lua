@@ -44,9 +44,9 @@ return {
           { text = with_focus_alt(my_icons.separators.left, " "), fg = bg.focused, bg = bg.unfocused },
           {
             text = with_diagnostic_overrides(
-              function(buf) return buf.devicon.icon end,
-              my_icons.diagnostics.error .. " ",
-              my_icons.diagnostics.warn .. " "
+              function(buf) return " " .. buf.devicon.icon end,
+              " " .. my_icons.diagnostics.error .. " ",
+              " " .. my_icons.diagnostics.warn .. " "
             ),
             fg = with_diagnostic_overrides(function(buf) return buf.devicon.color end, fg.error, fg.warning),
           },
@@ -62,7 +62,7 @@ return {
             truncation = { direction = "left" },
           },
           {
-            text = with_format(" %s", function(buf)
+            text = with_format(" %s ", function(buf)
               if buf.is_readonly then return my_icons.readonly end
               if buf.is_modified then return my_icons.modified end
               return my_icons.close
