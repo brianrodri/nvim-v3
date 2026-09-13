@@ -49,4 +49,5 @@ return {
   code = "󰅩",
   hunk = "󰢪",
   change_base = "󱒒",
+  trouble = "󰔫",
 }

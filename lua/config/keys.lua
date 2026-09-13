@@ -97,7 +97,7 @@ function M.on_lazy_attach()
     { "<leader>vt", function() obsidian_daily.today():open() end, desc = "Daily Note" },
     { "<leader>vr", function() snacks_picker.recent() end, desc = "Recent Notes" },
 
-    { "<leader>x", group = "trouble" },
+    { "<leader>x", group = "trouble", icon = { icon = my_icons.trouble, color = "red" } },
     { "<leader>xt", ":Trouble todo toggle<cr>", desc = "Todo Comments" },
     { "<leader>xT", ":Trouble todo toggle filter.buf=0<cr>", desc = "Todo Comments" },
     { "<leader>xx", ":Trouble diagnostics toggle<cr>", desc = "Diagnostics" },
