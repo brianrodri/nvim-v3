@@ -96,7 +96,6 @@ function M.setup_plugin_keymaps()
     { "<leader>v/", function() obsidian_picker.grep_notes() end, desc = "Grep Notes" },
     { "<leader>vf", function() obsidian_picker.find_notes() end, desc = "Find Notes" },
     { "<leader>vt", function() obsidian_daily.today():open() end, desc = "Daily Note" },
-    { "<leader>vr", function() snacks_picker.recent() end, desc = "Recent Notes" },
 
     { "<leader>x", group = "trouble", icon = { icon = my_icons.trouble, color = "red" } },
     { "<leader>xt", ":Trouble todo toggle<cr>", desc = "Todo Comments" },
