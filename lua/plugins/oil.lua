@@ -8,8 +8,6 @@ local GIT_SYMBOLS = {
   { "R", index = git_symbols.renamed, working_tree = git_symbols.renamed },
   { "T", index = git_symbols.type_changed, working_tree = git_symbols.type_changed },
   { "U", index = git_symbols.unmerged, working_tree = git_symbols.unmerged },
-  -- NOTE: git reports untracked entries as `??`, i.e. the same code in both the index and working
-  -- tree columns, so blank the index side to show the icon only once.
   { "?", index = " ", working_tree = git_symbols.untracked },
 }
 

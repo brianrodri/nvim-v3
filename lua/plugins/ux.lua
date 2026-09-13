@@ -10,11 +10,6 @@ return {
   {
     "nvim-mini/mini.icons",
     version = false,
-    -- NOTE: mini.icons draws filetype and LSP-kind icons from the same `nf-md-*` Nerd Font
-    -- set as my.icons, while nvim-web-devicons prefers `nf-dev-*`. Mocking the latter routes
-    -- every consumer through mini.icons, so tab and picker icons match the palette.
-    -- The mock has to land in `package.loaded` before nvim-cokeline is required, because
-    -- its buffers.lua caches the module at load time; hence loading eagerly at priority.
     lazy = false,
     priority = 100,
     config = function(_, opts)

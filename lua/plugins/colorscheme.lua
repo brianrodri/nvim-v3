@@ -17,7 +17,6 @@ return {
           local palette = vim.fn["everforest#get_palette"](config.background, config.colors_override)
           local set_hl = vim.fn["everforest#highlight"]
 
-          -- NOTE: Personalized colors for dashboard
           set_hl("SnacksDashboardHeader", palette.green, palette.none)
           set_hl("SnacksDashboardIcon", palette.green, palette.none)
           set_hl("SnacksDashboardDesc", palette.fg, palette.none)
