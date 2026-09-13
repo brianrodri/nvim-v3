@@ -194,19 +194,22 @@ end
 
 function M.setup_snacks_toggle_keymaps()
   local snacks_toggle = require("snacks.toggle")
+  local which_key = require("which-key")
 
-  snacks_toggle.option("spell", { name = "Spelling" }):map("<leader>us")
-  snacks_toggle.option("wrap", { name = "Wrap" }):map("<leader>uw")
-  snacks_toggle.option("relativenumber", { name = "Relative Number" }):map("<leader>uL")
-  snacks_toggle.diagnostics():map("<leader>ud")
-  snacks_toggle.line_number():map("<leader>ul")
-  snacks_toggle.option("conceallevel", { off = 0, on = 2, name = "Conceal Level" }):map("<leader>uc")
-  snacks_toggle.option("showtabline", { off = 0, on = 2, name = "Tabline" }):map("<leader>uA")
-  snacks_toggle.treesitter():map("<leader>uT")
-  snacks_toggle.option("background", { off = "light", on = "dark", name = "Dark Background" }):map("<leader>ub")
-  snacks_toggle.dim():map("<leader>uD")
-  snacks_toggle.animate():map("<leader>ua")
-  snacks_toggle.scroll():map("<leader>uS")
+  which_key.add({ "<leader>o", group = "options", icon = "󰒓" })
+
+  snacks_toggle.option("spell", { name = "Spelling" }):map("<leader>os")
+  snacks_toggle.option("wrap", { name = "Wrap" }):map("<leader>ow")
+  snacks_toggle.option("relativenumber", { name = "Relative Number" }):map("<leader>oL")
+  snacks_toggle.diagnostics():map("<leader>od")
+  snacks_toggle.line_number():map("<leader>ol")
+  snacks_toggle.option("conceallevel", { off = 0, on = 2, name = "Conceal Level" }):map("<leader>oc")
+  snacks_toggle.option("showtabline", { off = 0, on = 2, name = "Tabline" }):map("<leader>oA")
+  snacks_toggle.treesitter():map("<leader>oT")
+  snacks_toggle.option("background", { off = "light", on = "dark", name = "Dark Background" }):map("<leader>ob")
+  snacks_toggle.dim():map("<leader>oD")
+  snacks_toggle.animate():map("<leader>oa")
+  snacks_toggle.scroll():map("<leader>oS")
   snacks_toggle
     .new({
       id = "gitsigns",
@@ -214,7 +217,7 @@ function M.setup_snacks_toggle_keymaps()
       set = function(state) require("gitsigns").toggle_signs(state) end,
       get = function() return require("gitsigns.config").config.signcolumn end,
     })
-    :map("<leader>ug")
+    :map("<leader>og")
 end
 
 ---@param towards_eof boolean?
