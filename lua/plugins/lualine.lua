@@ -22,8 +22,7 @@ return {
         groups = {},
         title = false,
         filter = { range = true },
-        format = "{kind_icon}{symbol.name:Normal}",
-        hl_group = "lualine_c_normal",
+        format = "{kind_icon:lualine_c_normal}{symbol.name}",
       })
 
       return {
