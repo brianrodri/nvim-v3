@@ -24,7 +24,7 @@ return {
     hint = "󰌵",
   },
 
-  separator = {
+  separators = {
     left = "",
     right = "",
   },

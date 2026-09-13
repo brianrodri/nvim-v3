@@ -41,7 +41,7 @@ return {
         },
 
         components = {
-          { text = with_focus_alt(my_icons.separator.left, " "), fg = bg.focused, bg = bg.unfocused },
+          { text = with_focus_alt(my_icons.separators.left, " "), fg = bg.focused, bg = bg.unfocused },
           {
             text = with_diagnostic_overrides(
               function(buf) return buf.devicon.icon end,
@@ -69,7 +69,7 @@ return {
             end),
             on_click = function(_, _, _, _, buf) buf:delete() end,
           },
-          { text = with_focus_alt(my_icons.separator.right .. " ", "  "), fg = bg.focused, bg = bg.unfocused },
+          { text = with_focus_alt(my_icons.separators.right .. " ", "  "), fg = bg.focused, bg = bg.unfocused },
         },
       }
     end,

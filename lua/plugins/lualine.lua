@@ -31,11 +31,11 @@ return {
           theme = "everforest",
           globalstatus = true,
           component_separators = { left = "", right = "" },
-          section_separators = my_icons.separator,
+          section_separators = my_icons.separators,
         },
         sections = {
           lualine_a = {
-            { "mode", separator = my_icons.separator },
+            { "mode", separator = my_icons.separators },
           },
           lualine_b = {},
           lualine_c = {
@@ -50,8 +50,8 @@ return {
           },
           lualine_y = {},
           lualine_z = {
-            { "location", icon = my_icons.location, separator = { left = my_icons.separator.left } },
-            { "progress", icon = my_icons.progress, separator = { right = my_icons.separator.right } },
+            { "location", icon = my_icons.location, separator = { left = my_icons.separators.left } },
+            { "progress", icon = my_icons.progress, separator = { right = my_icons.separators.right } },
           },
         },
       }
