@@ -157,6 +157,11 @@ function M.on_treesitter_attach(ft_match, bufnr)
     { "]F", function() H.goto_textobject("goto_next_end", "@function.outer") end, desc = "Next Function End" },
     { "[F", function() H.goto_textobject("goto_previous_end", "@function.outer") end, desc = "Prev Function End" },
 
+    { "]a", function() H.goto_textobject("goto_next_start", "@parameter.inner") end, desc = "Next Argument" },
+    { "[a", function() H.goto_textobject("goto_previous_start", "@parameter.inner") end, desc = "Prev Argument" },
+    { "]A", function() H.goto_textobject("goto_next_end", "@parameter.inner") end, desc = "Next Argument End" },
+    { "[A", function() H.goto_textobject("goto_previous_end", "@parameter.inner") end, desc = "Prev Argument End" },
+
     {
       cond = function() return not vim.wo.diff end,
       { "]c", function() H.goto_textobject("goto_next_start", "@class.outer") end, desc = "Next Class" },
