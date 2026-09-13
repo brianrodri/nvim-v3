@@ -33,11 +33,11 @@ return {
 
       ui = { enable = false },
       daily_notes = { enabled = true, workdays_only = false },
-      unique_note = { enabled = true, format = my_prefs.task_notes_adapter },
-      note_id_func = my_prefs.task_notes_adapter,
+      unique_note = { enabled = true, format = my_prefs.generate_note_id },
+      note_id_func = my_prefs.generate_note_id,
 
       frontmatter = {
-        func = my_prefs.task_notes_frontmatter_adapter,
+        func = my_prefs.sanitize_frontmatter,
         sort = {
           "title",
           "status",
