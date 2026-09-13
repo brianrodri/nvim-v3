@@ -16,6 +16,7 @@ return {
               padding = 1,
               title = "Recent Files",
               cwd = true,
+              limit = 3,
             },
             {
               section = "projects",
@@ -23,6 +24,7 @@ return {
               indent = 2,
               padding = 1,
               title = "Recent Projects",
+              limit = 3,
             },
             { section = "startup" },
           },
