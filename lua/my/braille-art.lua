@@ -1,9 +1,9 @@
 local M = {}
 local H = {}
 
+---@module "snacks"
+---@return snacks.dashboard.Text[]
 function M.render_text()
-  ---@module "snacks"
-  ---@type snacks.dashboard.Text[]
   local dashboard_parts = {}
   for y = 1, #H.ART_LINES do
     for mask, beg_incl, end_excl in H.group_consecutive_chars(H.MASK_LINES[y]) do
