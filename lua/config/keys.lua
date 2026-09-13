@@ -1,7 +1,7 @@
 local M = {}
 local H = {}
 
-function M.on_lazy_attach()
+function M.setup_plugin_keymaps()
   local dap = require("dap")
   local dap_ui_widgets = require("dap.ui.widgets")
   local dapui = require("dapui")
@@ -210,7 +210,7 @@ function M.on_gitsigns_attach(bufnr)
   })
 end
 
-function M.setup_snacks_toggle_keymaps()
+function M.setup_toggle_keymaps()
   local snacks_toggle = require("snacks.toggle")
   local which_key = require("which-key")
 
