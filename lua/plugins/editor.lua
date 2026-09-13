@@ -9,12 +9,23 @@ return {
     opts = { move_cursor = "sticky" },
   },
 
-  -- Supplies the `textobjects.scm` queries behind the `]f`/`]c` motions bound in `config.keys`.
   {
     "nvim-treesitter/nvim-treesitter-textobjects",
     branch = "main",
     event = "VeryLazy",
     dependencies = { "nvim-treesitter/nvim-treesitter" },
     opts = { move = { set_jumps = true } },
+  },
+
+  {
+    "nvim-mini/mini.operators",
+    event = "VeryLazy",
+    opts = {
+      exchange = { prefix = "gs", reindent_linewise = true },
+      evaluate = { prefix = "" },
+      multiply = { prefix = "" },
+      replace = { prefix = "" },
+      sort = { prefix = "" },
+    },
   },
 }
