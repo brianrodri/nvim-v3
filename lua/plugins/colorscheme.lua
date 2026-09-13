@@ -10,7 +10,7 @@ return {
       vim.g.everforest_transparent_background = 2
 
       vim.api.nvim_create_autocmd("ColorScheme", {
-        group = vim.api.nvim_create_augroup("my.everforest_highlights", {}),
+        group = vim.api.nvim_create_augroup("MyEverforestHighlights", {}),
         pattern = "everforest",
         callback = function()
           local config = vim.fn["everforest#get_configuration"]()

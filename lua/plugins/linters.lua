@@ -5,7 +5,7 @@ return {
       local lint = require("lint")
       lint.linters_by_ft = vim.deepcopy(opts)
       vim.api.nvim_create_autocmd({ "BufEnter", "BufWritePost", "InsertLeave" }, {
-        group = vim.api.nvim_create_augroup("my.nvim-lint.autocmd", { clear = true }),
+        group = vim.api.nvim_create_augroup("MyNvimLintAutocmd", { clear = true }),
         callback = function() lint.try_lint() end,
       })
     end,
