@@ -47,13 +47,17 @@ function M.setup_plugin_keymaps()
     { "<leader>b/", function() snacks_picker.grep_buffers() end, desc = "Grep Buffers" },
 
     { "<leader>c", group = "code", icon = my_icons.code .. " " },
-    { "<leader>cd", vim.diagnostic.open_float, desc = "Line Diagnostics" },
-    { "]d", H.diagnostic_jump(true), desc = "Next Diagnostic" },
-    { "[d", H.diagnostic_jump(false), desc = "Prev Diagnostic" },
-    { "]e", H.diagnostic_jump(true, vim.diagnostic.severity.ERROR), desc = "Next Error" },
-    { "[e", H.diagnostic_jump(false, vim.diagnostic.severity.ERROR), desc = "Prev Error" },
-    { "]w", H.diagnostic_jump(true, vim.diagnostic.severity.WARN), desc = "Next Warning" },
-    { "[w", H.diagnostic_jump(false, vim.diagnostic.severity.WARN), desc = "Prev Warning" },
+
+    {
+      cond = H.diagnostic_is_enabled,
+      { "<leader>cd", vim.diagnostic.open_float, desc = "Line Diagnostics" },
+      { "]d", H.diagnostic_jump(true), desc = "Next Diagnostic" },
+      { "[d", H.diagnostic_jump(false), desc = "Prev Diagnostic" },
+      { "]e", H.diagnostic_jump(true, vim.diagnostic.severity.ERROR), desc = "Next Error" },
+      { "[e", H.diagnostic_jump(false, vim.diagnostic.severity.ERROR), desc = "Prev Error" },
+      { "]w", H.diagnostic_jump(true, vim.diagnostic.severity.WARN), desc = "Next Warning" },
+      { "[w", H.diagnostic_jump(false, vim.diagnostic.severity.WARN), desc = "Prev Warning" },
+    },
 
     { "]t", function() todo_comments.jump_next() end, desc = "Next Todo Comment" },
     { "[t", function() todo_comments.jump_prev() end, desc = "Prev Todo Comment" },
@@ -79,7 +83,12 @@ function M.setup_plugin_keymaps()
     { "<leader>f*", function() snacks_picker.grep_word() end, desc = "Find Word Under Cursor" },
     { "<leader>fb", function() snacks_picker.buffers() end, desc = "Find Buffers" },
     { "<leader>fc", function() snacks_picker.lazy() end, desc = "Find Lazy Config" },
-    { "<leader>fd", function() snacks_picker.diagnostics() end, desc = "Find Diagnostic" },
+    {
+      "<leader>fd",
+      function() snacks_picker.diagnostics() end,
+      desc = "Find Diagnostic",
+      cond = H.diagnostic_is_enabled,
+    },
     { "<leader>ff", function() snacks_picker.files() end, desc = "Find Files" },
     { "<leader>fg", function() snacks_picker.git_status() end, desc = "Find Diff" },
     { "<leader>fh", function() snacks_picker.help() end, desc = "Find Help" },
@@ -103,10 +112,13 @@ function M.setup_plugin_keymaps()
     { "<leader>x", group = "trouble", icon = { icon = my_icons.trouble, color = "red" } },
     { "<leader>xt", ":Trouble todo toggle<cr>", desc = "Todo Comments" },
     { "<leader>xT", ":Trouble todo toggle filter.buf=0<cr>", desc = "Todo Comments" },
-    { "<leader>xx", ":Trouble diagnostics toggle<cr>", desc = "Diagnostics" },
-    { "<leader>xX", ":Trouble diagnostics toggle filter.buf=0<cr>", desc = "Buffer Diagnostics" },
     { "<leader>xq", ":Trouble quickfix toggle<cr>", desc = "Quickfix List" },
     { "<leader>xl", ":Trouble loclist toggle<cr>", desc = "Location List" },
+    {
+      cond = H.diagnostic_is_enabled,
+      { "<leader>xx", ":Trouble diagnostics toggle<cr>", desc = "Diagnostics" },
+      { "<leader>xX", ":Trouble diagnostics toggle filter.buf=0<cr>", desc = "Buffer Diagnostics" },
+    },
   })
 end
 
@@ -253,6 +265,8 @@ function H.diagnostic_jump(towards_eof, severity)
   severity = severity and vim.diagnostic.severity[severity] or nil
   return function() vim.diagnostic.jump({ count = count * vim.v.count1, severity = severity, float = true }) end
 end
+
+function H.diagnostic_is_enabled() return vim.diagnostic.is_enabled() end
 
 ---@param widget "frames"|"scopes"
 function H.dap_centered_widget(widget)
