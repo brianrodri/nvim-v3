@@ -4,6 +4,7 @@ return {
   close = "󱎘",
   save = "󰆓",
   reload = "󰑐",
+  noice = "󰒡",
 
   git_symbols = {
     added = "",

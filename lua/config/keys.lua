@@ -109,6 +109,13 @@ function M.setup_plugin_keymaps()
     { "<leader>vf", function() obsidian_picker.find_notes() end, desc = "Find Notes" },
     { "<leader>vt", function() obsidian_daily.today():open() end, desc = "Daily Note" },
 
+    { "<leader>n", group = "noice", icon = { icon = my_icons.noice .. " ", color = "red" } },
+    { "<leader>nl", function() require("noice").cmd("last") end, desc = "Last Message" },
+    { "<leader>nh", function() require("noice").cmd("history") end, desc = "Message History" },
+    { "<leader>na", function() require("noice").cmd("all") end, desc = "All Messages" },
+    { "<leader>nd", function() require("noice").cmd("dismiss") end, desc = "Dismiss All" },
+    { "<leader>n/", function() require("noice").cmd("pick") end, desc = "Search Messages" },
+
     { "<leader>x", group = "trouble", icon = { icon = my_icons.trouble, color = "red" } },
     { "<leader>xt", ":Trouble todo toggle<cr>", desc = "Todo Comments" },
     { "<leader>xT", ":Trouble todo toggle filter.buf=0<cr>", desc = "Todo Comments" },
