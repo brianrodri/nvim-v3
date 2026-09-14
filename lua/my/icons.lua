@@ -1,6 +1,6 @@
 return {
-  readonly = "󰌾",
-  modified = "󰏫",
+  modified = "",
+  readonly = "󰦝",
   close = "󱎘",
   save = "󰆓",
   reload = "󰑐",
