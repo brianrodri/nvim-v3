@@ -5,6 +5,11 @@ return {
   },
 
   {
+    "mfussenegger/nvim-lint",
+    opts = { rust = { "clippy" } },
+  },
+
+  {
     "nvim-treesitter/nvim-treesitter",
     opts = { auto_install = { "rust" } },
     opts_extend = { "auto_install" },
