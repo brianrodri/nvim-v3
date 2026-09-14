@@ -17,8 +17,6 @@ return {
 
   {
     "stevearc/conform.nvim",
-    opts = {
-      formatters_by_ft = { ruby = { "prettier" } },
-    },
+    opts = { formatters_by_ft = { ruby = { "prettier" } } },
   },
 }

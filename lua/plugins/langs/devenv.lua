@@ -5,14 +5,12 @@ return {
   },
 
   {
-    "stevearc/conform.nvim",
-    opts = {
-      formatters_by_ft = { nix = { "nixfmt" } },
-    },
+    "mfussenegger/nvim-lint",
+    opts = { nix = { "statix", "deadnix" } },
   },
 
   {
-    "mfussenegger/nvim-lint",
-    opts = { nix = { "statix", "deadnix" } },
+    "stevearc/conform.nvim",
+    opts = { formatters_by_ft = { nix = { "nixfmt" } } },
   },
 }

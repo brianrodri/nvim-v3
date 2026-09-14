@@ -1,9 +1,7 @@
 return {
   {
     "neovim/nvim-lspconfig",
-    opts = {
-      ["rust_analyzer"] = true,
-    },
+    opts = { ["rust_analyzer"] = true },
   },
 
   {
@@ -14,8 +12,6 @@ return {
 
   {
     "stevearc/conform.nvim",
-    opts = {
-      formatters_by_ft = { bash = { "rustfmt" } },
-    },
+    opts = { formatters_by_ft = { bash = { "rustfmt" } } },
   },
 }

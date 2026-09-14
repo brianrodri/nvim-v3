@@ -20,9 +20,7 @@ return {
     opts_extend = { "auto_install" },
   },
 
-  {
-    "mxsdev/nvim-dap-vscode-js",
-  },
+  { "mxsdev/nvim-dap-vscode-js" },
 
   {
     "stevearc/conform.nvim",

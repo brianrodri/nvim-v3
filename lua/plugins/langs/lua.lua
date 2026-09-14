@@ -7,17 +7,11 @@ return {
   {
     "folke/lazydev.nvim",
     ft = "lua",
-    opts = {
-      library = {
-        { path = "${3rd}/luv/library", words = { "vim%.uv" } },
-      },
-    },
+    opts = { library = { { path = "${3rd}/luv/library", words = { "vim%.uv" } } } },
   },
 
   {
     "stevearc/conform.nvim",
-    opts = {
-      formatters_by_ft = { lua = { "stylua" } },
-    },
+    opts = { formatters_by_ft = { lua = { "stylua" } } },
   },
 }
