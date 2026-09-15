@@ -105,6 +105,7 @@ function M.setup_plugin_keymaps()
 
     { "<leader>v", group = "vault", icon = { icon = my_icons.vault .. " ", color = "purple" } },
     { "<leader>vn", my_obsidian_notes.new, desc = "New Note" },
+    { "<leader>vN", my_obsidian_notes.new_untitled, desc = "New Untitled Note" },
     { "<leader>v/", my_obsidian_notes.grep, desc = "Grep Notes" },
     { "<leader>vf", my_obsidian_notes.find, desc = "Find Notes" },
     { "<leader>vt", my_obsidian_notes.open_daily, desc = "Daily Note" },
