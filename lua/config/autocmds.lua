@@ -24,3 +24,19 @@ vim.api.nvim_create_autocmd("User", {
   pattern = "ObsidianNoteEnter",
   callback = function(ev) config_keys.on_obsidian_note_enter(ev.buf) end,
 })
+
+vim.api.nvim_create_autocmd("User", {
+  group = vim.api.nvim_create_augroup("MyOilDeletedFileBuffers", { clear = true }),
+  pattern = "OilActionsPost",
+  desc = "Delete buffers whose files were deleted in oil",
+  callback = function(args)
+    local bufdelete = require("snacks.bufdelete")
+
+    for _, action in ipairs(args.data.actions or {}) do
+      if action.type == "delete" and action.entry_type == "file" then
+        local bufname = action.url:match("^oil://(.*)$") or action.url
+        bufdelete({ file = bufname, force = true, wipe = true })
+      end
+    end
+  end,
+})
