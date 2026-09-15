@@ -6,8 +6,8 @@ function M.setup_plugin_keymaps()
   local dap_ui_widgets = require("dap.ui.widgets")
   local dapui = require("dapui")
   local my_icons = require("my.icons")
-  local obsidian_daily = require("obsidian.daily")
-  local obsidian_picker = require("obsidian.picker")
+  local my_obsidian_bookmarks = require("my.obsidian.bookmarks")
+  local my_obsidian_notes = require("my.obsidian.notes")
   local oil = require("oil")
   local snacks_lazygit = require("snacks.lazygit")
   local snacks_picker = require("snacks.picker")
@@ -101,13 +101,15 @@ function M.setup_plugin_keymaps()
     { "<leader>fn", function() snacks_picker.notifications() end, desc = "Find Notification" },
     { "<leader>fp", function() snacks_picker.pickers() end, desc = "Find Picker" },
     { "<leader>fr", function() snacks_picker.recent() end, desc = "Find Recent" },
-    { "<leader>fv", function() obsidian_picker.find_notes() end, desc = "Find Notes" },
+    { "<leader>fv", my_obsidian_notes.find, desc = "Find Notes" },
 
     { "<leader>v", group = "vault", icon = { icon = my_icons.vault .. " ", color = "purple" } },
-    { "<leader>vn", function() H.new_obsidian_note() end, desc = "New Note" },
-    { "<leader>v/", function() obsidian_picker.grep_notes() end, desc = "Grep Notes" },
-    { "<leader>vf", function() obsidian_picker.find_notes() end, desc = "Find Notes" },
-    { "<leader>vt", function() obsidian_daily.today():open() end, desc = "Daily Note" },
+    { "<leader>vn", my_obsidian_notes.new, desc = "New Note" },
+    { "<leader>v/", my_obsidian_notes.grep, desc = "Grep Notes" },
+    { "<leader>vf", my_obsidian_notes.find, desc = "Find Notes" },
+    { "<leader>vt", my_obsidian_notes.open_daily, desc = "Daily Note" },
+    { "<leader>vv", my_obsidian_bookmarks.open, desc = "Open Bookmark" },
+    { "<leader>va", my_obsidian_bookmarks.append, desc = "Append To Bookmark" },
 
     { "<leader>n", group = "noice", icon = { icon = my_icons.noice .. " ", color = "red" } },
     { "<leader>nl", function() require("noice").cmd("last") end, desc = "Last Message" },
@@ -210,6 +212,35 @@ function M.on_treesitter_attach(ft_match, bufnr)
   })
 end
 
+--- Binds the mappings that only mean anything inside a vault note, i.e. the ones acting on the note under the cursor.
+---
+--- Fired by `ObsidianNoteEnter`, which runs on every `BufEnter` into a note, so this must stay idempotent.
+---
+---@param bufnr integer
+function M.on_obsidian_note_enter(bufnr)
+  local my_obsidian_bookmarks = require("my.obsidian.bookmarks")
+  local my_obsidian_links = require("my.obsidian.links")
+  local which_key = require("which-key")
+
+  if vim.b[bufnr].my_obsidian_keymaps then return end
+  vim.b[bufnr].my_obsidian_keymaps = true
+
+  which_key.add({
+    buffer = bufnr,
+
+    {
+      "<leader>ov",
+      my_obsidian_bookmarks.toggle,
+      desc = my_obsidian_bookmarks.desc,
+      icon = my_obsidian_bookmarks.icon,
+    },
+    { "<leader>vj", my_obsidian_links.make_narrower, desc = "Make Narrower Note" },
+    { "<leader>vk", my_obsidian_links.make_broader, desc = "Make Broader Note" },
+    { "<leader>vJ", my_obsidian_links.pick_narrower, desc = "Pick Narrower Note" },
+    { "<leader>vK", my_obsidian_links.pick_broader, desc = "Pick Broader Note" },
+  })
+end
+
 ---@param bufnr integer
 function M.on_gitsigns_attach(bufnr)
   local gitsigns = require("gitsigns")
@@ -279,11 +310,6 @@ function H.diagnostic_is_enabled() return vim.diagnostic.is_enabled() end
 function H.dap_centered_widget(widget)
   local dap_ui_widgets = require("dap.ui.widgets")
   dap_ui_widgets.centered_float(dap_ui_widgets[widget])
-end
-
-function H.new_obsidian_note()
-  local obsidian_actions = require("obsidian.actions")
-  obsidian_actions.new(nil, function(n) n:open() end)
 end
 
 ---@param method "goto_next_start"|"goto_next_end"|"goto_previous_start"|"goto_previous_end"

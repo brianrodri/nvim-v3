@@ -18,3 +18,9 @@ vim.api.nvim_create_autocmd("FileType", {
   group = vim.api.nvim_create_augroup("MyTreesitterKeyBindings", { clear = true }),
   callback = function(ev) config_keys.on_treesitter_attach(ev.match, ev.buf) end,
 })
+
+vim.api.nvim_create_autocmd("User", {
+  group = vim.api.nvim_create_augroup("MyObsidianKeyBindings", { clear = true }),
+  pattern = "ObsidianNoteEnter",
+  callback = function(ev) config_keys.on_obsidian_note_enter(ev.buf) end,
+})
