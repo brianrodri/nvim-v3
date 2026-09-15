@@ -32,6 +32,7 @@ return {
         inc_rename = true,
         lsp_doc_border = true,
       },
+      views = { cmdline_input = { size = { max_width = 80 } } },
     },
     dependencies = {
       "MunifTanjim/nui.nvim",
