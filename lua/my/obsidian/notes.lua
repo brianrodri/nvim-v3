@@ -4,9 +4,18 @@
 local M = {}
 local H = {}
 
---- Creates a note and opens it.
+--- Asks for a title, then creates a note named after it and opens it.
+---
+--- An empty answer falls back to `M.new_untitled`, by way of `note_id_func`.
 function M.new()
   require("obsidian.actions").new(nil, function(note) note:open() end)
+end
+
+--- Creates a note named by `note_id_func` alone, without asking for a title, and opens it.
+---
+--- The empty id is what skips the prompt: `obsidian.note` treats it the same as an unanswered one.
+function M.new_untitled()
+  require("obsidian.actions").new("", function(note) note:open() end)
 end
 
 --- Picks a note by name, formatted the way snacks formats any file.
