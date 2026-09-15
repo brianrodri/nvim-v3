@@ -32,6 +32,9 @@ return {
       },
 
       ui = { enable = false },
+      picker = { name = "snacks.picker" },
+      -- Registers the `obsidian_files` / `obsidian_grep` snacks sources, which are opt-in.
+      callbacks = { post_setup = function() require("obsidian.picker.snacks").setup() end },
       daily_notes = { enabled = true, workdays_only = false },
       unique_note = { enabled = true, format = my_prefs.generate_note_id },
       note_id_func = my_prefs.generate_note_id,
