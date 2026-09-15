@@ -47,6 +47,8 @@ return {
   lazy = "󰒲",
   quit = "󰈆",
   vault = "",
+  bookmark_on = "󰃀",
+  bookmark_off = "󰃃",
   code = "󰅩",
   hunk = "󰢪",
   change_base = "󱒒",
