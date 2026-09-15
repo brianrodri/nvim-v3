@@ -14,6 +14,19 @@ function M.generate_note_id()
   return os.date("%y%m%d") .. string.rep("0", H.BASE36_DIGITS_PER_DAY - #suffix) .. suffix
 end
 
+--- Names a new note after its title, falling back to `M.generate_note_id` when it has none.
+---
+--- `obsidian.nvim` calls this for every note it creates, handing it whatever was typed at the creation
+--- prompt. `builtin.title_id` slugifies that text and breaks collisions against `dir`.
+---
+---@param title string|? the text typed at the creation prompt, if any.
+---@param dir obsidian.Path|? the directory the note will be written to.
+---@return string
+function M.resolve_note_id(title, dir)
+  if title == nil or title == "" then return M.generate_note_id() end
+  return require("obsidian.builtin").title_id(title, dir)
+end
+
 ---@param note obsidian.Note
 function M.sanitize_frontmatter(note)
   local fstat = note.path and vim.uv.fs_stat(tostring(note.path))
