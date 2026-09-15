@@ -1,4 +1,4 @@
-local my_prefs = require("my.obsidian-prefs")
+local my_prefs = require("my.obsidian.opts")
 
 return {
   {
