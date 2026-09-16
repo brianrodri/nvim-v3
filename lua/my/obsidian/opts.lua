@@ -29,26 +29,7 @@ end
 
 ---@param note obsidian.Note
 function M.sanitize_frontmatter(note)
-  local fstat = note.path and vim.uv.fs_stat(tostring(note.path))
-  local ctime = fstat and H.parse_time(fstat.ctime) or os.time()
-  local mtime = fstat and H.parse_time(fstat.mtime) or ctime
-
-  return vim.tbl_deep_extend(
-    "force",
-    { id = note.id, title = note.title, dateCreated = H.format_time(ctime), dateModified = H.format_time(mtime) },
-    H.default_frontmatter(note.path),
-    vim.deepcopy(note.metadata)
-  )
-end
-
----@module 'obsidian'
----@param path obsidian.Path
-function H.default_frontmatter(path)
-  if vim.iter(path and path:parents() or {}):any(function(p) return vim.endswith(tostring(p), "tasks") end) then
-    return { kind = "task", status = "open", priority = "normal", scheduled = os.date("%m/%d/%Y") }
-  else
-    return { kind = "memo" }
-  end
+  return vim.tbl_deep_extend("force", { id = note.id, title = note.title }, vim.deepcopy(note.metadata))
 end
 
 ---@param time_value {sec: number, nsec: number}|?
