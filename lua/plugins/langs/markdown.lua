@@ -23,7 +23,7 @@ return {
           ---@type {}
           overrides = {
             notes_subdir = "01-inbox",
-            new_notes_location = "current_dir",
+            new_notes_location = "notes_subdir",
             attachments = { folder = "99-meta/attachments" },
             daily_notes = { folder = "02-periodic/01-daily" },
             unique_note = { folder = "01-inbox" },
