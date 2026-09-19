@@ -29,6 +29,7 @@ end
 
 ---@param note obsidian.Note
 function M.sanitize_frontmatter(note)
+  if vim.startswith(note.path:vault_relative_path() or "", "02-periodic/01-daily") then return note.metadata end
   return vim.tbl_deep_extend("force", { id = note.id, title = note.title }, vim.deepcopy(note.metadata))
 end
 
