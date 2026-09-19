@@ -136,8 +136,8 @@ function H.prepend_to(bookmark)
   local text = api.input("Append")
   if not text or text == "" then return end
   local note = require("obsidian.note").from_file(api.resolve_workspace_dir() / bookmark.path)
-  -- `placement` has no default, so "top" must be explicit for the newest capture to land first.
-  note:insert_text(text, { placement = "top" })
+  -- `placement` has no default, so "bottom" must be explicit for captures to land in arrival order.
+  note:insert_text(text, { placement = "bottom" })
 end
 
 --- Flattens the bookmark tree down to the `file` bookmarks, which are the only ones text can be appended to.
