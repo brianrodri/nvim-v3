@@ -33,8 +33,8 @@ function H.cross_reference(resolve, header)
 
   H.resolve_note(resolve, function(there)
     if not there or tostring(there.path) == tostring(here.path) then return end
-    here:insert_text(H.link_item(there), { section = header })
-    local line = there:insert_text(H.link_item(here), { section = back_header })
+    here:insert_text(H.link_item(there), { section = header, placement = "bottom" })
+    local line = there:insert_text(H.link_item(here), { section = back_header, placement = "bottom" })
     vim.fn.settagstack(0, { items = { { tagname = here:display_name(), from = vim.fn.getpos(".") } } }, "t")
     there:open({ line = line, col = 0 })
   end)
