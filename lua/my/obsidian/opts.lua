@@ -28,10 +28,7 @@ function M.resolve_note_id(title, dir)
 end
 
 ---@param note obsidian.Note
-function M.sanitize_frontmatter(note)
-  if vim.startswith(note.path:vault_relative_path() or "", "02-periodic/01-daily") then return note.metadata end
-  return vim.tbl_deep_extend("force", { id = note.id, title = note.title }, vim.deepcopy(note.metadata))
-end
+function M.sanitize_frontmatter(note) return note.metadata end
 
 ---@param time_value {sec: number, nsec: number}|?
 function H.parse_time(time_value)
