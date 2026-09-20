@@ -28,4 +28,6 @@ return {
       sort = { prefix = "" },
     },
   },
+
+  { "MagicDuck/grug-far.nvim", opts = {} },
 }
