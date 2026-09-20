@@ -10,6 +10,8 @@
   "mini.notify": { "branch": "main", "commit": "13df5edffc3e27937b166a0f25a8329b46e15a4e" },
   "mini.nvim": { "branch": "main", "commit": "4389a4f31f854ce066949ea89c72dc71564f5c20" },
   "mini.operators": { "branch": "main", "commit": "9e0aa164b097c6cb45e59b9371c9347ac06eb822" },
+  "neotest": { "branch": "master", "commit": "27bf921498043f7ecd821d6db68d05de244bbd02" },
+  "neotest-jest": { "branch": "main", "commit": "0e7979d51301dfae5ef839d771bd28cf593fde3f" },
   "noice.nvim": { "branch": "main", "commit": "7bfd942445fb63089b59f97ca487d605e715f155" },
   "nui.nvim": { "branch": "main", "commit": "10fc361835c856ba4233ef5ea135b919bf3dce97" },
   "nvim-cokeline": { "branch": "main", "commit": "854849e6b853a6ee1f17d62c80ae37435cfb0a3e" },

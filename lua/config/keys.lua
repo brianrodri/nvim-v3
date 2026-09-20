@@ -119,6 +119,20 @@ function M.setup_plugin_keymaps()
     { "<leader>nd", function() require("noice").cmd("dismiss") end, desc = "Dismiss All" },
     { "<leader>n/", function() require("noice").cmd("pick") end, desc = "Search Messages" },
 
+    {
+      cond = function() return H.has_neotest_connection() end,
+
+      { "<leader>t", group = "test" },
+      { "<leader>tt", function() require("neotest").run.run() end, desc = "Run Nearest" },
+      { "<leader>tT", function() require("neotest").run.run(vim.fn.expand("%")) end, desc = "Run File" },
+      { "<leader>tl", function() require("neotest").run.run_last() end, desc = "Run Last" },
+      { "<leader>tS", function() require("neotest").run.stop() end, desc = "Stop" },
+      { "<leader>ts", function() require("neotest").summary.toggle() end, desc = "Toggle Summary" },
+      { "<leader>to", function() require("neotest").output.open({ enter = true }) end, desc = "Show Output" },
+      { "<leader>tO", function() require("neotest").output_panel.toggle() end, desc = "Toggle Output Panel" },
+      { "<leader>tw", function() require("neotest").watch.toggle(vim.fn.expand("%")) end, desc = "Toggle Watch" },
+    },
+
     { "<leader>x", group = "trouble", icon = { icon = my_icons.trouble, color = "red" } },
     { "<leader>xt", ":Trouble todo toggle<cr>", desc = "Todo Comments" },
     { "<leader>xT", ":Trouble todo toggle filter.buf=0<cr>", desc = "Todo Comments" },
@@ -306,6 +320,13 @@ function H.diagnostic_jump(towards_eof, severity)
 end
 
 function H.diagnostic_is_enabled() return vim.diagnostic.is_enabled() end
+
+--- Whether the buffer is one the registered `neotest-jest` adapter recognizes as a Jest test file,
+--- i.e. it sits under a project whose `package.json` actually depends on `jest`.
+function H.has_neotest_connection()
+  local neotest = require("neotest")
+  return vim.tbl_isempty(neotest.state.adapter_ids())
+end
 
 ---@param widget "frames"|"scopes"
 function H.dap_centered_widget(widget)
