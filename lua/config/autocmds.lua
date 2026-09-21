@@ -40,3 +40,8 @@ vim.api.nvim_create_autocmd("User", {
     end
   end,
 })
+
+vim.api.nvim_create_autocmd("FileType", {
+  group = vim.api.nvim_create_augroup("MyGrugFarCustomKeybinds", { clear = true }),
+  callback = function(ev) config_keys.on_grug_far_attach(ev.buf) end,
+})

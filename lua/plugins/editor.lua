@@ -29,5 +29,10 @@ return {
     },
   },
 
-  { "MagicDuck/grug-far.nvim", opts = {} },
+  {
+    "MagicDuck/grug-far.nvim",
+    ---@module "grug"
+    ---@type grug.far.OptionsOverride
+    opts = { headerMaxWidth = 80 },
+  },
 }

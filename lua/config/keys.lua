@@ -13,7 +13,6 @@ function M.setup_plugin_keymaps()
   local snacks_picker = require("snacks.picker")
   local todo_comments = require("todo-comments")
   local which_key = require("which-key")
-  local grug_far = require("grug-far")
 
   which_key.add({
     {
@@ -81,7 +80,6 @@ function M.setup_plugin_keymaps()
     { "<leader>f:", function() snacks_picker.commands() end, desc = "Find Command" },
     { "<leader>f.", function() snacks_picker.resume() end, desc = "Resume Finding" },
     { "<leader>f/", function() snacks_picker.grep() end, desc = "Find Pattern" },
-    { "<leader>f%", function() grug_far.toggle_instance({}) end, desc = "Find and Replace" },
     { "<leader>f*", function() snacks_picker.grep_word() end, desc = "Find Word Under Cursor" },
     { "<leader>fb", function() snacks_picker.buffers() end, desc = "Find Buffers" },
     { "<leader>fc", function() snacks_picker.lazy() end, desc = "Find Lazy Config" },
@@ -311,6 +309,29 @@ function M.setup_toggle_keymaps()
       get = function() return require("gitsigns.config").config.signcolumn end,
     })
     :map("<leader>og")
+end
+
+function M.on_grug_far_attach(buffer)
+  if vim.b[buffer].my_grug_far_keymaps == true then return end
+  vim.b[buffer].my_grug_far_keymaps = true
+
+  local ext = vim.bo[buffer].buftype == "" and vim.fn.expand("%:e")
+
+  ---@type grug.far.OptionsOverride
+  local open_opts = {
+    transient = true,
+    visualSelectionUsage = "auto-detect",
+    prefills = { filesFilter = ext and ext ~= "" and ("*." .. ext) or nil },
+  }
+
+  local grug_far = require("grug-far")
+  local which_key = require("which-key")
+
+  which_key.add({
+    buffer = buffer,
+    mode = { "n", "x" },
+    { "<leader>f%", function() grug_far.open(open_opts) end, desc = "Find and Replace" },
+  })
 end
 
 ---@param towards_eof boolean?
