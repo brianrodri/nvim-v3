@@ -45,3 +45,9 @@ vim.api.nvim_create_autocmd("FileType", {
   group = vim.api.nvim_create_augroup("MyGrugFarCustomKeybinds", { clear = true }),
   callback = function(ev) config_keys.on_grug_far_attach(ev.buf) end,
 })
+
+vim.api.nvim_create_autocmd("FileType", {
+  group = vim.api.nvim_create_augroup("MyQuickCloseKeybinds", { clear = true }),
+  pattern = config_keys.QUICK_CLOSE_FILETYPES,
+  callback = function(ev) config_keys.on_quick_close_attach(ev.buf) end,
+})

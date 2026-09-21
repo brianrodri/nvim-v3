@@ -334,6 +334,15 @@ function M.on_grug_far_attach(buffer)
   })
 end
 
+function M.on_quick_close_attach(buffer)
+  if vim.b[buffer].my_quick_close_keymaps == true then return end
+  vim.b[buffer].my_quick_close_keymaps = true
+
+  require("which-key").add({
+    { "q", function() vim.cmd("bd! " .. buffer) end, hidden = true, mode = "n" },
+  })
+end
+
 ---@param towards_eof boolean?
 ---@param severity vim.diagnostic.Severity?
 function H.diagnostic_jump(towards_eof, severity)
@@ -390,5 +399,24 @@ function H.pick_gitsigns_branch(global)
     end,
   })
 end
+
+M.QUICK_CLOSE_FILETYPES = {
+  "checkhealth",
+  "dap-float",
+  "dbout",
+  "gitsigns-blame",
+  "grug-far",
+  "help",
+  "lspinfo",
+  "neotest-output-panel",
+  "neotest-output",
+  "neotest-summary",
+  "notify",
+  "PlenaryTestPopup",
+  "qf",
+  "spectre_panel",
+  "startuptime",
+  "tsplayground",
+}
 
 return M
