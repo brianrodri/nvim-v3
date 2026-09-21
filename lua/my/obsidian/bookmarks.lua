@@ -107,9 +107,9 @@ end
 ---@return obsidian.Bookmark[]
 function H.read()
   local bookmarks = require("obsidian.bookmarks")
-  local path = bookmarks.resolve_bookmark_file()
-  if not path then return {} end
-  local file = assert(io.open(path, "r"), "failed to open bookmarks file")
+  local path = require("obsidian.api").resolve_workspace_dir() / ".obsidian" / "bookmarks.json"
+  if not path:exists() then return {} end
+  local file = assert(io.open(tostring(path), "r"), "failed to open bookmarks file")
   local items = bookmarks.parse(file:read("*a"))
   file:close()
   return items
