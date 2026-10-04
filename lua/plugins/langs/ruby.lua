@@ -19,4 +19,20 @@ return {
     "stevearc/conform.nvim",
     opts = { formatters_by_ft = { ruby = { "prettier" } } },
   },
+
+  {
+    "nvim-neotest/neotest",
+    dependencies = { "zidhuss/neotest-minitest" },
+    opts = function(_, opts)
+      opts.adapters = opts.adapters or {}
+      table.insert(
+        opts.adapters,
+        require("neotest-minitest")({
+          -- Neovim drops $VIM from pty jobs; minitest-reporters needs it to fall back to the stock reporter the adapter parses.
+          test_cmd = { "env", "VIM=" .. vim.env.VIM, "bundle", "exec", "ruby", "-Itest" },
+        })
+      )
+      return opts
+    end,
+  },
 }
