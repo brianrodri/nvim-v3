@@ -9,6 +9,8 @@ function M.setup_plugin_keymaps()
   local my_obsidian_bookmarks = require("my.obsidian.bookmarks")
   local my_obsidian_notes = require("my.obsidian.notes")
   local oil = require("oil")
+  local refactoring = require("refactoring")
+  local refactoring_debug = require("refactoring.debug")
   local snacks_lazygit = require("snacks.lazygit")
   local snacks_picker = require("snacks.picker")
   local todo_comments = require("todo-comments")
@@ -118,6 +120,19 @@ function M.setup_plugin_keymaps()
     { "<leader>na", function() require("noice").cmd("all") end, desc = "All Messages" },
     { "<leader>nd", function() require("noice").cmd("dismiss") end, desc = "Dismiss All" },
     { "<leader>n/", function() require("noice").cmd("pick") end, desc = "Search Messages" },
+
+    {
+      mode = { "n", "x" },
+      { "<leader>r", group = "refactor" },
+      { "<leader>rs", function() refactoring.select_refactor() end, desc = "Select Refactor" },
+      {
+        expr = true,
+        { "<leader>ri", function() refactoring.inline_var() end, desc = "Inline Variable" },
+        { "<leader>rx", function() refactoring.extract_var() end, desc = "Extract Variable" },
+        { "<leader>rf", function() refactoring.extract_func() end, desc = "Extract Function" },
+        { "<leader>rF", function() refactoring.extract_func_to_file() end, desc = "Extract Function To File" },
+      },
+    },
 
     {
       cond = function() return H.has_neotest_connection() end,

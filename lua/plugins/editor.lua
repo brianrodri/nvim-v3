@@ -30,6 +30,13 @@ return {
   },
 
   {
+    "ThePrimeagen/refactoring.nvim",
+    lazy = true,
+    dependencies = { "lewis6991/async.nvim" },
+    opts = {},
+  },
+
+  {
     "MagicDuck/grug-far.nvim",
     ---@module "grug"
     ---@type grug.far.OptionsOverride
