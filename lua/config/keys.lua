@@ -42,6 +42,13 @@ function M.setup_plugin_keymaps()
       { "<leader><C-l>", ":rightbelow vsplit<CR>", desc = "New Right Split" },
     },
 
+    { "<leader>a", group = "ai" },
+    { "<leader>aa", ":CodeCompanionChat Toggle<cr>", desc = "Toggle Chat" },
+    { "<leader>ap", ":CodeCompanionActions<cr>", desc = "Action Palette", mode = { "n", "x" } },
+    { "<leader>ai", ":CodeCompanion ", desc = "Inline Prompt", mode = { "n", "x" } },
+    { "<leader>ac", ":CodeCompanionChat Add<cr>", desc = "Add To Chat", mode = "x" },
+    { "<leader>ah", ":CodeCompanionHistory<cr>", desc = "Chat History" },
+
     { "<leader>b", group = "buffer" },
     { "<leader>bn", ":enew<cr>", desc = "New Buffer" },
     { "<leader>bd", ":bd!<cr>", desc = "Delete Buffer" },
