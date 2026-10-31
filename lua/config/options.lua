@@ -1,6 +1,7 @@
 vim.g.mapleader = " "
 
 vim.opt.background = "dark"
+vim.opt.colorcolumn = "+1"
 vim.opt.conceallevel = 2
 vim.opt.foldlevel = 99
 vim.opt.expandtab = true
