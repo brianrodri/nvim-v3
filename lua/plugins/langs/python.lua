@@ -1,7 +1,7 @@
 return {
   {
     "neovim/nvim-lspconfig",
-    opts = { ["pyright"] = true },
+    opts = { ["basedpyright"] = true },
   },
 
   {
