@@ -19,4 +19,10 @@ return {
     "stevearc/conform.nvim",
     opts = { formatters_by_ft = { bash = { "rustfmt" } } },
   },
+
+  {
+    "saecki/crates.nvim",
+    event = { "BufRead Cargo.toml" },
+    opts = {},
+  },
 }
