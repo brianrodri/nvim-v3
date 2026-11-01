@@ -6,7 +6,16 @@ return {
 
   {
     "mfussenegger/nvim-lint",
-    opts = { python = { "mypy", "pylint" } },
+    opts = function(_, opts)
+      -- Oppia keeps runtime deps out of the venv (so mypy treats them as Any,
+      -- like CI does); pylint still needs them, as in Oppia's own lint runner.
+      table.insert(
+        require("lint").linters.pylint.args,
+        1,
+        [[--init-hook=import os, sys; os.path.isdir("third_party/python_libs") and sys.path.append(os.path.abspath("third_party/python_libs"))]]
+      )
+      opts.python = { "mypy", "pylint" }
+    end,
   },
 
   {
