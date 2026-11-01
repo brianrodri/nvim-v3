@@ -1,6 +1,16 @@
 return {
   {
+    -- https://github.com/christoomey/vim-tmux-navigator/blob/e41c431a0c7b7388ae7ba341f01a0d217eb3a432/README.md?plain=1#L58-L81
     "christoomey/vim-tmux-navigator",
+    -- The default terminal-mode mappings use Vim's `<C-w>:`, which Neovim types into the terminal (e.g. lazygit).
+    init = function() vim.g.tmux_navigator_no_mappings = 1 end,
+    keys = {
+      { "<c-h>", "<cmd>TmuxNavigateLeft<cr>" },
+      { "<c-j>", "<cmd>TmuxNavigateDown<cr>" },
+      { "<c-k>", "<cmd>TmuxNavigateUp<cr>" },
+      { "<c-l>", "<cmd>TmuxNavigateRight<cr>" },
+      { "<c-\\>", "<cmd>TmuxNavigatePrevious<cr>" },
+    },
   },
 
   {
