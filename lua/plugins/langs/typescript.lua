@@ -1,7 +1,29 @@
+--- Returns the git root if `bufnr` is in my work repo (any clone or worktree of it).
+local function work_repo_root(bufnr)
+  local git_root = vim.fs.root(bufnr, ".git")
+  if not git_root then return nil end
+  local json_path = string.format("%s/package.json", git_root)
+  local ok, pkg = pcall(function() return vim.json.decode(vim.iter(vim.fn.readfile(json_path)):join("\n")) end)
+  if ok and pkg.name == "stepful" then return git_root end
+end
+
 return {
   {
     "neovim/nvim-lspconfig",
-    opts = { ["tsc"] = true },
+    opts = function(_, opts)
+      local ts_ls = dofile(vim.api.nvim_get_runtime_file("lsp/ts_ls.lua", false)[1])
+      opts["ts_ls"] = vim.tbl_deep_extend("force", ts_ls, {
+        root_dir = function(bufnr, on_dir)
+          if work_repo_root(bufnr) then ts_ls.root_dir(bufnr, on_dir) end
+        end,
+      })
+      local tsc = dofile(vim.api.nvim_get_runtime_file("lsp/tsc.lua", false)[1])
+      opts["tsc"] = vim.tbl_deep_extend("force", tsc, {
+        root_dir = function(bufnr, on_dir)
+          if not work_repo_root(bufnr) then tsc.root_dir(bufnr, on_dir) end
+        end,
+      })
+    end,
   },
 
   {
