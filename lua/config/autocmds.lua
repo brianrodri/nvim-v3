@@ -26,6 +26,15 @@ vim.api.nvim_create_autocmd("User", {
 })
 
 vim.api.nvim_create_autocmd("User", {
+  group = vim.api.nvim_create_augroup("MyGitsignsPrBase", { clear = true }),
+  pattern = "GitSignsUpdate",
+  desc = "Re-detect the gitsigns PR base when the branch changes",
+  callback = function(ev)
+    if ev.data and ev.data.buffer then require("my.pr_base").on_update(ev.data.buffer) end
+  end,
+})
+
+vim.api.nvim_create_autocmd("User", {
   group = vim.api.nvim_create_augroup("MyOilDeletedFileBuffers", { clear = true }),
   pattern = "OilActionsPost",
   desc = "Delete buffers whose files were deleted in oil",

@@ -332,6 +332,14 @@ function M.setup_toggle_keymaps()
       get = function() return require("gitsigns.config").config.signcolumn end,
     })
     :map("<leader>og")
+  snacks_toggle
+    .new({
+      id = "gitsigns_pr_base",
+      name = "Git Signs PR Base",
+      set = function(state) require("my.pr_base").set_enabled(state) end,
+      get = function() return require("my.pr_base").enabled end,
+    })
+    :map("<leader>op")
 end
 
 function M.on_grug_far_attach(buffer)
